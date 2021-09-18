@@ -2284,6 +2284,7 @@ article .entry-content {
 }
 .single article .entry-content, .page article .entry-content {
 	color:#000;
+	margin-top: 50px;
 }
 .blog-data-wrapper {
 	display: inline-block;

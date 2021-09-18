@@ -28,7 +28,7 @@
 		if ( 'post' === get_post_type() ) : ?>
 		<div class="entry-meta">
 			<div class="blog-data-wrapper">
-				<div class="post-data-divider"></div>
+				<div class=""></div>
 				<div class="post-data-positioning">
 					<div class="post-data-text">
 						<?php personalblogily_posted_on(); ?>
