@@ -1,0 +1,43 @@
+// main: ../main.scss
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the slim of the site/application.
+// -----------------------------------------------------------------------------
+
+.dm-slim-version {
+    .control-language {
+        position: relative;
+    }
+
+    .dm-buttons {
+        position: absolute;
+        padding: 0;
+        width: 100%;
+
+        @include sm {
+            padding: 0 0 0.5em 0;
+            position: relative;
+            @include flexbox;
+            justify-content: flex-end;
+        }
+
+        .dm-buttons-left {
+            display: none;
+        }
+
+        .dm-buttons-right {
+            right: 3em;
+            position: absolute;
+    
+            @include sm {
+                position: relative;
+                right: initial;
+            }
+        }
+    }
+
+    #dm-code-raw {
+        display: block;
+        margin-top: -60px;
+        line-height: 1.8;
+    }
+}

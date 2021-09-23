@@ -1,0 +1,17 @@
+// main: ../main.scss
+// -----------------------------------------------------------------------------
+// This file contains styles that are specific to the home page.
+// -----------------------------------------------------------------------------
+
+.dm-code-snippet {
+
+  &.no-background-mobile {
+    @include xs {
+      padding: 0;
+    }
+  }
+
+  #dm-copy-raw-code-copied {
+    display: none;
+  }
+}
