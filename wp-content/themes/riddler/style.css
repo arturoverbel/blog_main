@@ -2285,6 +2285,7 @@ article .entry-content {
 .single article .entry-content, .page article .entry-content {
 	color:#000;
 	margin-top: 50px;
+	line-height: 35px;
 }
 .blog-data-wrapper {
 	display: inline-block;
