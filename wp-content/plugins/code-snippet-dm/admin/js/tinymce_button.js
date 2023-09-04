@@ -8,7 +8,7 @@
                     title: "DM Code Snippet",
                     classes: 'dm-code-snippet-lightbox',
                     width: 700,
-                    height: 640,
+                    height: 680,
                     body: [
                         {
                             type   : 'listbox',
@@ -28,6 +28,18 @@
                             classes: 'dm-code-snippet-slim',
                             label  : 'Slim Version',
                             tooltip: 'This is recommended for one line code. No BG, no extra style, just the code.',
+                            values : [
+                                { text: 'Yes', value: 'yes' },
+                                { text: 'No', value: 'no' }
+                            ],
+                            value : 'no' // Sets the default
+                        },
+                        {
+                            type   : 'listbox',
+                            name   : 'linenumbers',
+                            classes: 'dm-code-snippet-line-numbers',
+                            label  : 'Line Numbers',
+                            tooltip: 'This will allow you to enable the Line Numbers column.',
                             values : [
                                 { text: 'Yes', value: 'yes' },
                                 { text: 'No', value: 'no' }
@@ -95,7 +107,8 @@
                                 { text: 'Python', value: 'python' },
                                 { text: 'Ruby', value: 'ruby' },
                                 { text: 'SQL', value: 'sql' },
-                                { text: 'TypeScript', value: 'typescript' }
+                                { text: 'TypeScript', value: 'typescript' },
+                                { text: 'Bash/Shell', value: 'shell' }
 
                             ],
                             value : 'php' // Sets the default
@@ -139,29 +152,27 @@
                     ],
                     onsubmit: function( e ) {
 
-                        if (e.data.language === 'markup') {
-                            var entityMap = {
-                                '&': '&amp;',
-                                '<': '&lt;',
-                                '>': '&gt;',
-                                '"': '&quot;',
-                                "'": '&#39;',
-                                '/': '&#x2F;',
-                                '`': '&#x60;',
-                                '=': '&#x3D;'
-                              };
-                              
-                              function escapeHtml (string) {
-                                return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-                                  return entityMap[s];
-                                });
-                              }
+                        var entityMap = {
+                            '&': '&amp;',
+                            '<': '&lt;',
+                            '>': '&gt;',
+                            '"': '&quot;',
+                            "'": '&#39;',
+                            '/': '&#x2F;',
+                            '`': '&#x60;',
+                            '=': '&#x3D;'
+                            };
+                            
+                            function escapeHtml (string) {
+                            return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+                                return entityMap[s];
+                            });
+                            }
 
-                              e.data.code = escapeHtml(e.data.code);
+                            e.data.code = escapeHtml(e.data.code);
 
-                        }
 
-                        editor.insertContent( '[dm_code_snippet background="' + e.data.backgroundoption + '" background-mobile="' + e.data.backgroundoptionmobile + '" slim="' + e.data.slimoption + '" bg-color="' + e.data.bgcolor + '" theme="' + e.data.theme + '" language="' + e.data.language + '" wrapped="' + e.data.wrap + '" height="' + e.data.maxheight + '" copy-text="' + e.data.copycode + '" copy-confirmed="' + e.data.copiedcode + '"]<pre class="dm-pre-admin-side">' + e.data.code + '</pre>[/dm_code_snippet]');
+                        editor.insertContent( '[dm_code_snippet background="' + e.data.backgroundoption + '" background-mobile="' + e.data.backgroundoptionmobile + '" slim="' + e.data.slimoption + '" line-numbers="' + e.data.linenumbers + '" bg-color="' + e.data.bgcolor + '" theme="' + e.data.theme + '" language="' + e.data.language + '" wrapped="' + e.data.wrap + '" height="' + e.data.maxheight + '" copy-text="' + e.data.copycode + '" copy-confirmed="' + e.data.copiedcode + '"]<pre class="dm-pre-admin-side">' + e.data.code + '</pre>[/dm_code_snippet]');
                     }
                 });
             },

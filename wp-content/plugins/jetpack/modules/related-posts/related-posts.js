@@ -40,6 +40,10 @@
 			var args = 'relatedposts=1';
 			var relatedPosts = document.querySelector( '#jp-relatedposts' );
 
+			if ( ! relatedPosts ) {
+				return false;
+			}
+
 			if ( relatedPosts.hasAttribute( 'data-exclude' ) ) {
 				args += '&relatedposts_exclude=' + relatedPosts.getAttribute( 'data-exclude' );
 			}
@@ -161,12 +165,14 @@
 				if ( post.img.src ) {
 					html +=
 						anchor[ 0 ] +
-						'<img class="jp-relatedposts-post-img" src="' +
+						'<img class="jp-relatedposts-post-img" loading="lazy" src="' +
 						post.img.src +
 						'" width="' +
 						post.img.width +
 						'" height="' +
 						post.img.height +
+						( post.img.srcset ? '" srcset="' + post.img.srcset : '' ) +
+						( post.img.sizes ? '" sizes="' + post.img.sizes : '' ) +
 						'" alt="' +
 						post.img.alt_text +
 						'" />' +
@@ -291,6 +297,10 @@
 
 		var endpointURL = jprp.getEndpointURL();
 		var relatedPosts = document.querySelector( '#jp-relatedposts' );
+
+		if ( ! endpointURL ) {
+			return;
+		}
 
 		if ( document.querySelectorAll( '#jp-relatedposts .jp-relatedposts-post' ).length ) {
 			afterPostsHaveLoaded();

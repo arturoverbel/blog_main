@@ -77,7 +77,7 @@ class CSDM_Code_Snippet_Dm {
 		$this->csdm_load_dependencies();
 		$this->csdm_set_locale();
 		$this->csdm_define_admin_hooks();
-		$this->csdm_define_public_hooks();
+		// $this->csdm_define_public_hooks();
 		$this->csdm_shortcode_hooks();
 		$this->csdm_tinymce_hooks();
 
@@ -176,7 +176,7 @@ class CSDM_Code_Snippet_Dm {
 	 */
 	private function csdm_shortcode_hooks() {
 
-		$shortcode = new CSDM_Shortcode();
+		$shortcode = new CSDM_Shortcode($this->csdm_get_plugin_name(), $this->csdm_get_version());
 
 	}
 

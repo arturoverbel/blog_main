@@ -9,7 +9,7 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
     private $options;
     private $cache;
     private $users = [];
-	private $extra = [];
+    private $extra = [];
     private $feedbacks = [];
 
     public function __construct($helper, $helperOptimization, $dbManager, $options, $cache) {
@@ -27,23 +27,23 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
         $GLOBALS["comment"] = $comment;
         // BEGIN
 
-		if (!$this->extra && !empty($args["commentsArgs"])) {
-			$this->extra = $this->cache->getExtraCache($args["commentsArgs"]);
-		}
+        if (!$this->extra && !empty($args["commentsArgs"])) {
+            $this->extra = $this->cache->getExtraCache($args["commentsArgs"]);
+        }
 
         $search = [];
         $replace = [];
         $commentOutput = "";
         $depth = isset($args["addComment"]) ? $args["addComment"] : $depth;
         $uniqueId = $comment->comment_ID . "_" . $comment->comment_parent;
-        $commentWrapperClass = ["wpd-comment"];
+        $commentWrapperClass = get_comment_class("wpd-comment",$comment->comment_ID, $comment->comment_post_ID);
         $commentWrapClass = ["wpd-comment-wrap"];
 
-		if (isset($this->extra[$comment->comment_ID]["metas"])) {
-			$commentMetas = $this->extra[ $comment->comment_ID ]["metas"];
-		} else {
-			$this->extra[$comment->comment_ID]["metas"] = $commentMetas = get_comment_meta($comment->comment_ID);
-		}
+        if (isset($this->extra[$comment->comment_ID]["metas"])) {
+            $commentMetas = $this->extra[$comment->comment_ID]["metas"];
+        } else {
+            $this->extra[$comment->comment_ID]["metas"] = $commentMetas = get_comment_meta($comment->comment_ID);
+        }
 
         $isClosed = isset($commentMetas[self::META_KEY_CLOSED]) ? intval($commentMetas[self::META_KEY_CLOSED][0]) : 0;
         $isInline = isset($commentMetas[self::META_KEY_FEEDBACK_FORM_ID][0]) ? intval($commentMetas[self::META_KEY_FEEDBACK_FORM_ID][0]) : 0;
@@ -66,11 +66,11 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
             }
         }
 
-		if (isset($this->extra[$comment->comment_ID]["commentLink"])) {
-			$commentLink = $this->extra[$comment->comment_ID]["commentLink"];
-		} else {
-			$this->extra[$comment->comment_ID]["commentLink"] = $commentLink = get_comment_link($comment);
-		}
+        if (isset($this->extra[$comment->comment_ID]["commentLink"])) {
+            $commentLink = $this->extra[$comment->comment_ID]["commentLink"];
+        } else {
+            $this->extra[$comment->comment_ID]["commentLink"] = $commentLink = get_comment_link($comment);
+        }
 
         if (!$this->options->wp["isPaginate"]) {
             if (!empty($args["last_visit"]) && !empty($args["current_user_email"]) && strtotime($comment->comment_date) > $args["last_visit"] && $args["current_user_email"] !== $comment->comment_author_email) {
@@ -82,12 +82,12 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
         if (isset($this->users[$userKey])) {
             $user = $this->users[$userKey];
         } else if ($user = $this->cache->getUserCache($userKey)) {
-        	$this->helper->fillUserRoleData($user, $args);
-			$this->users[$userKey] = $user;
+            $this->helper->fillUserRoleData($user, $args);
+            $this->users[$userKey] = $user;
         } else {
-			$this->users[$userKey] = $user = $this->helper->getCommentAuthor($comment, $args);
-			$this->cache->setUserCache($userKey, $user);
-		}
+            $this->users[$userKey] = $user = $this->helper->getCommentAuthor($comment, $args);
+            $this->cache->setUserCache($userKey, $user);
+        }
 
         if ($comment->comment_parent && $this->options->wp["threadComments"]) {
             $commentWrapperClass[] = "wpd-reply";
@@ -139,11 +139,11 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
                 $toolsActions .= sprintf($args["wpd_close_btn"], $closeText);
             }
         } else {
-			if (isset($this->extra[$comment->comment_ID]["commentParent"])) {
-				$parentComment = $this->extra[$comment->comment_ID]["commentParent"];
-			} else {
-				$this->extra[$comment->comment_ID]["commentParent"] = $parentComment = get_comment($comment->comment_parent);
-			}
+            if (isset($this->extra[$comment->comment_ID]["commentParent"])) {
+                $parentComment = $this->extra[$comment->comment_ID]["commentParent"];
+            } else {
+                $this->extra[$comment->comment_ID]["commentParent"] = $parentComment = get_comment($comment->comment_parent);
+            }
 
             $parentCommentLink = "#comment-" . $parentComment->comment_ID;
             $userKey = $parentComment->user_id . "_" . $parentComment->comment_author_email . "_" . $parentComment->comment_author;
@@ -284,7 +284,7 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
                 $commentLinkIcon = $beforeCommentLink;
             }
             if ($this->options->thread_layouts["showCommentLink"]) {
-                $commentLinkIcon .= apply_filters("wpdiscuz_comment_link_img", "<span wpd-tooltip='" . esc_attr($this->options->getPhrase("wc_comment_link", ["comment" => $comment])) . "' wpd-tooltip-position='left'><i class='fas fa-link' aria-hidden='true' data-comment-url='" . esc_url_raw($commentLink) . "'></i></span>", $comment);
+                $commentLinkIcon .= apply_filters("wpdiscuz_comment_link_img", "<span wpd-tooltip='" . esc_attr($this->options->getPhrase("wc_comment_link", ["comment" => $comment])) . "' wpd-tooltip-position='left'><i class='fas fa-link' aria-hidden='true' data-wpd-clipboard='" . esc_url_raw($commentLink) . "'></i></span>", $comment);
             }
             if ($afterCommentLink) {
                 $commentLinkIcon .= $afterCommentLink;
@@ -299,7 +299,7 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
         $showVote = false;
         if ($this->options->thread_layouts["showVotingButtons"] && $isApproved) {
             if ($this->options->thread_layouts["votingButtonsStyle"]) {
-                $voteCount = isset($commentMetas[self::META_KEY_VOTES_SEPARATE]) ? unserialize($commentMetas[self::META_KEY_VOTES_SEPARATE][0]) : ["like" => 0, "dislike" => 0];
+                $voteCount = isset($commentMetas[self::META_KEY_VOTES_SEPARATE]) ? maybe_unserialize($commentMetas[self::META_KEY_VOTES_SEPARATE][0]) : ["like" => 0, "dislike" => 0];
                 $like = !empty($voteCount["like"]) ? intval($voteCount["like"]) : 0;
                 $voteResult = "<div class='wpd-vote-result wpd-vote-result-like" . ($like ? " wpd-up" : "") . "' title='" . esc_attr($like) . "'>" . esc_html($this->helper->getNumber($like)) . "</div>";
                 if ($this->options->thread_layouts["enableDislikeButton"]) {
@@ -510,9 +510,9 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
         $output = apply_filters("wpdiscuz_thread_end", $output, $comment, $depth, $args);
         $output .= "</div>";
 
-		if (!empty($args["lastCommentIdInList"]) && !empty($args["commentsArgs"]) && $args["lastCommentIdInList"] === $comment->comment_ID && $this->extra) {
-			$this->cache->setExtraCache($args["commentsArgs"], $this->extra);
-		}
+        if (!empty($args["lastCommentIdInList"]) && !empty($args["commentsArgs"]) && $args["lastCommentIdInList"] === $comment->comment_ID && $this->extra) {
+            $this->cache->setExtraCache($args["commentsArgs"], $this->extra);
+        }
 
         return $output;
     }

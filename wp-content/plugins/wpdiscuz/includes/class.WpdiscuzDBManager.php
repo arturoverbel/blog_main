@@ -171,37 +171,28 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         return $this->db->get_col($sqlCommentIds);
     }
 
-	/**
-	 * check comment availability
-	 */
-	public function commentIDsToRemove($args, $visibleCommentIds) {
-		if ($args["status"] === "all") {
-			$approved = " AND `comment_approved` IN('1','0')";
-		} else {
-			$approved = " AND `comment_approved` = '1'";
-		}
-		$sqlCommentIds = "SELECT `comment_ID` FROM `{$this->db->comments}` WHERE `comment_ID` IN(" . $visibleCommentIds . ")" . $approved . ";";
-		$notRemovedCommentIDs = $this->db->get_col($sqlCommentIds);
-		return array_values(array_diff(explode(",", $visibleCommentIds), $notRemovedCommentIDs));
-	}
+    /**
+     * check comment availability
+     */
+    public function commentIDsToRemove($args, $visibleCommentIds) {
+        if ($args["status"] === "all") {
+            $approved = " AND `comment_approved` IN('1','0')";
+        } else {
+            $approved = " AND `comment_approved` = '1'";
+        }
+        $sqlCommentIds = "SELECT `comment_ID` FROM `{$this->db->comments}` WHERE `comment_ID` IN(" . $visibleCommentIds . ")" . $approved . ";";
+        $notRemovedCommentIDs = $this->db->get_col($sqlCommentIds);
+        return array_values(array_diff(explode(",", $visibleCommentIds), $notRemovedCommentIDs));
+    }
 
-	public function getUserByNickname($nickname) {
-		$caps = "";
-		if (is_multisite()) {
-			$caps = " INNER JOIN `{$this->db->usermeta}` AS `um2` ON `u`.`ID` = `um2`.`user_id` AND `um2`.`meta_key` = '{$this->db->prefix}capabilities'";
-		}
-		$sql = $this->db->prepare("SELECT `u`.`ID`, `u`.`user_email`, `u`.`display_name` FROM `{$this->db->users}` AS `u` INNER JOIN `{$this->db->usermeta}` AS `um` ON `u`.`ID` = `um`.`user_id` AND `um`.`meta_key` = 'nickname'$caps WHERE `um`.`meta_value` = %s LIMIT 1", $nickname);
-		return $this->db->get_row($sql);
-	}
-
-	public function getUserByNicknameOrNicename($nickname) {
-		$caps = "";
-		if (is_multisite()) {
-			$caps = " INNER JOIN `{$this->db->usermeta}` AS `um2` ON `u`.`ID` = `um2`.`user_id` AND `um2`.`meta_key` = '{$this->db->prefix}capabilities'";
-		}
-		$sql = $this->db->prepare("SELECT `u`.`ID`, `u`.`user_email`, `u`.`display_name` FROM `{$this->db->users}` AS `u` INNER JOIN `{$this->db->usermeta}` AS `um` ON `u`.`ID` = `um`.`user_id` AND `um`.`meta_key` = 'nickname'$caps WHERE `um`.`meta_value` = %s OR `u`.`user_nicename` = %s LIMIT 1", $nickname, $nickname);
-		return $this->db->get_row($sql);
-	}
+    public function getUserByNicename($nicename) {
+        $caps = "";
+        if (is_multisite()) {
+            $caps = " INNER JOIN `{$this->db->usermeta}` AS `um` ON `u`.`ID` = `um`.`user_id` AND `um`.`meta_key` = '{$this->db->prefix}capabilities'";
+        }
+        $sql = $this->db->prepare("SELECT `u`.`ID`, `u`.`user_email`, `u`.`display_name` FROM `{$this->db->users}` AS `u` $caps WHERE `u`.`user_nicename` = %s LIMIT 1", $nicename);
+        return $this->db->get_row($sql);
+    }
 
     /**
      * @param type $visibleCommentIds comment ids which is visible at the moment on front end
@@ -242,7 +233,14 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         $activationKey = md5($email . uniqid() . time());
         $sql = $this->db->prepare("INSERT INTO `{$this->emailNotification}` (`email`, `subscribtion_id`, `post_id`, `subscribtion_type`, `activation_key`,`confirm`) VALUES(%s, %d, %d, %s, %s, %d);", $email, $subsriptionId, $postId, $subscriptionType, $activationKey, $confirm);
         $this->db->query($sql);
-        return $this->db->insert_id ? ["id" => $this->db->insert_id, "activation_key" => $activationKey] : false;
+        if ($this->db->insert_id) {
+            $result = ["id" => $this->db->insert_id, "activation_key" => $activationKey];
+            do_action("wpdiscuz_add_email_notification_success", $subsriptionId, $postId, $email, $subscriptionType, $confirm);
+        } else {
+            $result = false;
+            do_action("wpdiscuz_add_email_notification_fail", $subsriptionId, $postId, $email, $subscriptionType, $confirm);
+        }
+        return $result;
     }
 
     public function getPostNewCommentNotification($post_id, $email) {
@@ -404,10 +402,10 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         }
     }
 
-	public function deleteSubscriptionsByEmail($email) {
-		$sql = $this->db->prepare("DELETE FROM `{$this->emailNotification}` WHERE `email` = %s;", trim($email));
-		$this->db->query($sql);
-	}
+    public function deleteSubscriptionsByEmail($email) {
+        $sql = $this->db->prepare("DELETE FROM `{$this->emailNotification}` WHERE `email` = %s;", trim($email));
+        $this->db->query($sql);
+    }
 
     public function deleteVotes($commnetId) {
         if ($cId = intval($commnetId)) {
@@ -424,7 +422,7 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
     /* === GRAVATARS CACHE === */
 
     public function deleteGravatarsTable() {
-		$this->db->query("DROP TABLE IF EXISTS `" . $this->db->prefix . "wc_avatars_cache`");
+        $this->db->query("DROP TABLE IF EXISTS `" . $this->db->prefix . "wc_avatars_cache`");
     }
 
     /* === GRAVATARS CACHE === */
@@ -528,9 +526,31 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
     /* === LSTC SUBSCRIPTIONS - Lightweight Subscribe To Comments === */
 
     /* === STATISTICS === */
+    
+    private function wpdiscuz_comments_types_exclude($table_alias = ""){
+        $default_types = ["order_note"];
+        $excludeTypes = apply_filters('wpdiscuz_comments_types_exclude', $default_types);
+        $notIn = "";
+        $sql = "";
+        $alias = $table_alias ? '`'.trim($table_alias," `").'`.' : '';
+        if ($excludeTypes && is_array($excludeTypes)) {
+            foreach ($excludeTypes as $excludeType) {
+                $notIn .= "'" . trim(esc_sql(sanitize_text_field($excludeType))) . "',";
+            }
+            $notIn = rtrim($notIn, ",");
+        }
+
+        if ($notIn) {
+            $sql = " AND $alias`comment_type` NOT IN($notIn) ";
+        }
+        
+        return $sql;
+    }
+
 
     public function getCommentsCount() {
-        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_approved` = '1';";
+        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_approved` = '1'";
+        $sql .= $this->wpdiscuz_comments_types_exclude();
         return number_format(intval($this->db->get_var($sql)));
     }
 
@@ -540,22 +560,26 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
     }
 
     public function getThreadsCount() {
-        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_approved` = '1' AND `comment_parent` = 0;";
+        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_approved` = '1' AND `comment_parent` = 0";
+        $sql .= $this->wpdiscuz_comments_types_exclude();
         return number_format(intval($this->db->get_var($sql)));
     }
 
     public function getRepliesCount() {
-        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_approved` = '1' AND `comment_parent` != 0;";
+        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_approved` = '1' AND `comment_parent` != 0";
+        $sql .= $this->wpdiscuz_comments_types_exclude();
         return number_format(intval($this->db->get_var($sql)));
     }
 
     public function getUserCommentersCount() {
-        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `user_id` != 0 AND `comment_approved` = '1';";
+        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `user_id` != 0 AND `comment_approved` = '1'";
+        $sql .= $this->wpdiscuz_comments_types_exclude();
         return number_format(intval($this->db->get_var($sql)));
     }
 
     public function getGuestCommentersCount() {
-        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `user_id` = 0 AND `comment_approved` = '1';";
+        $sql = "SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `user_id` = 0 AND `comment_approved` = '1'";
+        $sql .= $this->wpdiscuz_comments_types_exclude();
         return number_format(intval($this->db->get_var($sql)));
     }
 
@@ -600,7 +624,8 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         } else if ($interval === "year") {
             $date->modify("-1 year");
         }
-        $sql = "SELECT COUNT(`comment_ID`) AS `count`, SUBSTR(`comment_date_gmt`, 1, 10) AS `date` FROM `{$this->db->comments}` WHERE `comment_approved` = '1'" . ($interval === "all" ? "" : " AND `comment_date_gmt` > '{$date->format('Y-m-d')}'") . " GROUP BY `date`;";
+        $notIn = $this->wpdiscuz_comments_types_exclude();
+        $sql = "SELECT COUNT(`comment_ID`) AS `count`, SUBSTR(`comment_date_gmt`, 1, 10) AS `date` FROM `{$this->db->comments}` WHERE `comment_approved` = '1'" . ($interval === "all" ? "" : " AND `comment_date_gmt` > '{$date->format('Y-m-d')}'") . $notIn . " GROUP BY `date`;";
         $results = $this->db->get_results($sql, ARRAY_A);
         $data = [];
         foreach ($results as $k => $val) {
@@ -648,20 +673,22 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         $limit = 6;
         $offset = $page > 0 ? ($page - 1) * $limit : 0;
         $limit++;
-        $sql = "SELECT `c`.`comment_author_email`, `c`.`comment_author`, COUNT(`c`.`comment_ID`) AS `count`, IFNULL(`s`.`count`, 0) AS `scount`, IFNULL(`fi`.`count`, 0) AS `ficount`, IFNULL(`fw`.`count`, 0) AS `fwcount`, MAX(`c`.`comment_date_gmt`) AS `last_date` FROM `{$this->db->comments}` AS `c` LEFT JOIN (SELECT `email`, COUNT(`email`) AS `count` FROM `{$this->emailNotification}` WHERE `confirm` = 1 GROUP BY `email`) AS `s` ON `s`.`email` LIKE `c`.`comment_author_email` LEFT JOIN (SELECT `follower_email`, COUNT(`follower_email`) AS `count` FROM `{$this->followUsers}` WHERE `confirm` = 1 GROUP BY `follower_email`) AS `fi` ON `fi`.`follower_email` LIKE `c`.`comment_author_email` LEFT JOIN (SELECT `user_email`, COUNT(`user_email`) AS `count` FROM `{$this->followUsers}` WHERE `confirm` = 1 GROUP BY `user_email`) AS `fw` ON `fw`.`user_email` LIKE `c`.`comment_author_email` WHERE `c`.`comment_approved` = '1' GROUP BY `c`.`comment_author_email`, `c`.`comment_author` ORDER BY $ordering LIMIT $limit OFFSET $offset;";
+        $notIn = $this->wpdiscuz_comments_types_exclude('c');
+        $sql = "SELECT `c`.`comment_author_email`, `c`.`comment_author`, COUNT(`c`.`comment_ID`) AS `count`, IFNULL(`s`.`count`, 0) AS `scount`, IFNULL(`fi`.`count`, 0) AS `ficount`, IFNULL(`fw`.`count`, 0) AS `fwcount`, MAX(`c`.`comment_date_gmt`) AS `last_date` FROM `{$this->db->comments}` AS `c` LEFT JOIN (SELECT `email`, COUNT(`email`) AS `count` FROM `{$this->emailNotification}` WHERE `confirm` = 1 GROUP BY `email`) AS `s` ON `s`.`email` LIKE `c`.`comment_author_email` LEFT JOIN (SELECT `follower_email`, COUNT(`follower_email`) AS `count` FROM `{$this->followUsers}` WHERE `confirm` = 1 GROUP BY `follower_email`) AS `fi` ON `fi`.`follower_email` LIKE `c`.`comment_author_email` LEFT JOIN (SELECT `user_email`, COUNT(`user_email`) AS `count` FROM `{$this->followUsers}` WHERE `confirm` = 1 GROUP BY `user_email`) AS `fw` ON `fw`.`user_email` LIKE `c`.`comment_author_email` WHERE `c`.`comment_approved` = '1' $notIn GROUP BY `c`.`comment_author_email`, `c`.`comment_author` ORDER BY $ordering LIMIT $limit OFFSET $offset;";
         return $this->db->get_results($sql, ARRAY_A);
     }
 
     public function getMostReactedCommentId($postId, $cache = true) {
         if ($cache) {
             $stat = get_post_meta($postId, self::POSTMETA_STATISTICS, true);
-            if (!is_array($stat))
+            if (!is_array($stat)) {
                 $stat = [];
-            if ($stat && isset($stat[self::POSTMETA_REACTED])) {
-                $reacted = intval($stat[self::POSTMETA_REACTED]);
+            }
+            if ($stat && array_key_exists(self::POSTMETA_REACTED, $stat) && $stat[self::POSTMETA_REACTED]) {
+                $reacted = (int)$stat[self::POSTMETA_REACTED];
             } else {
                 $sql = $this->db->prepare("SELECT v.`comment_id` FROM `{$this->usersVoted}` AS `v` INNER JOIN `{$this->db->comments}` AS `c` ON `v`.`comment_id` = `c`.`comment_ID` WHERE `c`.`comment_post_ID`  = %d AND `c`.`comment_approved` = '1' GROUP BY `v`.`comment_id` ORDER BY COUNT(`v`.`comment_id`) DESC, `c`.`comment_ID` DESC LIMIT 1;", $postId);
-                $reacted = intval($this->db->get_var($sql));
+                $reacted = (int)$this->db->get_var($sql);
                 $stat[self::POSTMETA_REACTED] = $reacted;
                 update_post_meta($postId, self::POSTMETA_STATISTICS, $stat);
             }
@@ -691,6 +718,69 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
     /* === STATISTICS === */
 
     /* === MODAL === */
+
+    public function getAllSubscriptions($args) {
+
+        $defaults = ["confirm" => 1, "orderby" => "id", "order" => "desc"];
+
+        $args = wp_parse_args($args, $defaults);
+
+        $sql = "SELECT * FROM `{$this->emailNotification}` WHERE 1";
+
+        if (!empty($args["id"])) {
+            $sql .= " AND `id` = " . (int)$args["id"];
+        }
+
+        if (!empty($args["email"])) {
+            $sql .= " AND `email` = " . esc_sql($args["email"]);
+        }
+
+        if (!empty($args["subscribtion_id"])) {
+            $sql .= " AND `subscribtion_id` = " . (int)$args["subscribtion_id"];
+        }
+
+        if (!empty($args["post_id"])) {
+            $sql .= " AND `post_id` = " . (int)$args["post_id"];
+        }
+
+        if (!empty($args["subscribtion_type"])) {
+            $sql .= " AND `subscribtion_type` = '" . esc_sql($args["subscribtion_type"]) . "'";
+        }
+
+        if (!empty($args["activation_key"])) {
+            $sql .= " AND `activation_key` = " . esc_sql($args["activation_key"]);
+        }
+
+        if (!empty($args["confirm"])) {
+            $sql .= " AND `confirm` = " . (int)$args["confirm"];
+        }
+
+        if (!empty($args["subscription_date"])) {
+            $sql .= " AND `subscription_date` = " . esc_sql($args["subscription_date"]);
+        }
+
+        if (!empty($args["imported_from"])) {
+            $sql .= " AND `imported_from` = " . esc_sql($args["imported_from"]);
+        }
+
+        if (!empty($args["orderby"])) {
+            $sql .= " ORDER BY " . esc_sql($args["orderby"]);
+        }
+
+        if (!empty($args["order"])) {
+            $sql .= " " . esc_sql($args["order"]);
+        }
+
+        if (!empty($args["limit"])) {
+            $sql .= " LIMIT " . (int)$args["limit"];
+        }
+
+        if (!empty($args["offset"])) {
+            $sql .= " OFFSET " . (int)$args["offset"];
+        }
+
+        return $this->db->get_results($sql, ARRAY_A);
+    }
 
     public function getSubscriptionsCount($userEmail) {
         $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->emailNotification}` WHERE `email` = %s;", trim($userEmail));
@@ -884,8 +974,8 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
     public function regenerateVoteMetas($ids) {
         foreach ($ids as $k => $id) {
             $votes = $this->getVotes($id);
-            $like = (int) $votes[0];
-            $dislike = (int) $votes[1];
+            $like = (int)$votes[0];
+            $dislike = (int)$votes[1];
             update_comment_meta($id, self::META_KEY_VOTES_SEPARATE, ["like" => $like, "dislike" => $dislike]);
             update_comment_meta($id, self::META_KEY_VOTES, $like - $dislike);
         }
@@ -970,8 +1060,8 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
 
     public function showRatingRebuildMsg() {
         $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->postmeta}` WHERE `meta_key` = %s", self::POSTMETA_RATING_COUNT);
-		$ratingCount = intval($this->db->get_var($sql));
-		$separateCount = intval($this->db->get_var("SELECT COUNT(*) FROM `{$this->db->postmeta}` WHERE `meta_key` LIKE '" . self::POSTMETA_RATING_SEPARATE_AVG . "%'"));
+        $ratingCount = intval($this->db->get_var($sql));
+        $separateCount = intval($this->db->get_var("SELECT COUNT(*) FROM `{$this->db->postmeta}` WHERE `meta_key` LIKE '" . self::POSTMETA_RATING_SEPARATE_AVG . "%'"));
         return $ratingCount > 0 && $separateCount === 0;
     }
 
@@ -987,7 +1077,7 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
 
     public function rebuildRatings($data) {
         foreach ($data as $key => $value) {
-            $val = unserialize($value["meta_value"]);
+            $val = maybe_unserialize($value["meta_value"]);
             if ($val) {
                 $newValues = [];
                 foreach ($val as $k => $v) {
@@ -1000,8 +1090,8 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
                         $avg += $newData["meta_value"] * $newData["count"];
                         $c += $newData["count"];
                     }
-                	update_post_meta($value["post_id"], self::POSTMETA_RATING_SEPARATE_AVG . $k, round($avg / $c, 1));
-                	update_post_meta($value["post_id"], self::POSTMETA_RATING_SEPARATE_COUNT . $k, $c);
+                    update_post_meta($value["post_id"], self::POSTMETA_RATING_SEPARATE_AVG . $k, round($avg / $c, 1));
+                    update_post_meta($value["post_id"], self::POSTMETA_RATING_SEPARATE_COUNT . $k, $c);
                 }
                 update_post_meta($value["post_id"], self::POSTMETA_RATING_COUNT, $newValues, $val);
             }
@@ -1049,10 +1139,10 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         return $this->db->get_col($sql);
     }
 
-	public function deleteFeedbackFormsForPost($post_id) {
-		$sql = $this->db->prepare("DELETE FROM `{$this->feedbackForms}` WHERE `post_id` = %d", $post_id);
-		$this->db->query($sql);
-	}
+    public function deleteFeedbackFormsForPost($post_id) {
+        $sql = $this->db->prepare("DELETE FROM `{$this->feedbackForms}` WHERE `post_id` = %d", $post_id);
+        $this->db->query($sql);
+    }
 
     /* === /Feedback Comments === */
     /* === User Votes === */
@@ -1115,25 +1205,26 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
 
     /* === /Remove Comment Meta === */
 
-	public function deletePostMeta($metaKey) {
-		$sql = $this->db->prepare("DELETE FROM `{$this->db->postmeta}` WHERE `meta_key` = %s;", $metaKey);
-		$this->db->query($sql);
-	}
+    public function deletePostMeta($metaKey) {
+        $sql = $this->db->prepare("DELETE FROM `{$this->db->postmeta}` WHERE `meta_key` = %s;", $metaKey);
+        $this->db->query($sql);
+    }
 
-	public function deleteUserMeta($metaKey) {
-		$sql = $this->db->prepare("DELETE FROM `{$this->db->usermeta}` WHERE `meta_key` = %s;", $metaKey);
-		$this->db->query($sql);
-	}
+    public function deleteUserMeta($metaKey) {
+        $sql = $this->db->prepare("DELETE FROM `{$this->db->usermeta}` WHERE `meta_key` = %s;", $metaKey);
+        $this->db->query($sql);
+    }
 
-	public function deleteFieldsRatingsPostMeta() {
-		$this->db->get_var("DELETE FROM `{$this->db->postmeta}` WHERE `meta_key` LIKE '" . self::POSTMETA_RATING_COUNT . "%'");
-		$this->db->get_var("DELETE FROM `{$this->db->postmeta}` WHERE `meta_key` LIKE '" . self::POSTMETA_RATING_SEPARATE_AVG . "%'");
-	}
+    public function deleteFieldsRatingsPostMeta() {
+        $this->db->get_var("DELETE FROM `{$this->db->postmeta}` WHERE `meta_key` LIKE '" . self::POSTMETA_RATING_COUNT . "%'");
+        $this->db->get_var("DELETE FROM `{$this->db->postmeta}` WHERE `meta_key` LIKE '" . self::POSTMETA_RATING_SEPARATE_AVG . "%'");
+    }
 
-	public function makeStickyCommentsRegular() {
-		$sql = $this->db->prepare("UPDATE {$this->db->comments} SET `comment_type` = 'comment' WHERE `comment_type` = %s", self::WPDISCUZ_STICKY_COMMENT);
-		$this->db->query($sql);
-	}
+    public function makeStickyCommentsRegular() {
+        $sql = $this->db->prepare("UPDATE {$this->db->comments} SET `comment_type` = 'comment' WHERE `comment_type` = %s", self::WPDISCUZ_STICKY_COMMENT);
+        $this->db->query($sql);
+    }
+
     /* === Fix Tables === */
 
     public function fixTables() {

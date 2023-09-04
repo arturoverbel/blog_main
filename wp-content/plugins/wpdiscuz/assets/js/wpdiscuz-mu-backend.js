@@ -1,35 +1,34 @@
 jQuery(document).ready(function ($) {
 
-    $(document).on('click', '#wmuSelectMimes', function (e) {
+    $('body').on('click', '#wmuSelectMimes', function (e) {
         $('.wpd-mu-mimes input[type="checkbox"]').each(function (i, v) {
             $(this).prop('checked', true);
         });
     });
 
-    $(document).on('click', '#wmuUnselectMimes', function (e) {
+    $('body').on('click', '#wmuUnselectMimes', function (e) {
         $('.wpd-mu-mimes input[type="checkbox"]').each(function (i, v) {
             $(this).prop('checked', false);
         });
     });
 
-    $(document).on('click', '#wmuInvertMimes', function (e) {
+    $('body').on('click', '#wmuInvertMimes', function (e) {
         $('.wpd-mu-mimes input[type="checkbox"]').each(function (i, v) {
             $(this).prop('checked', !$(this).prop('checked'));
         });
     });
 
-    $(document).on('click', '.wmu-attachment-delete', function (e) {
+    $('body').on('click', '.wmu-attachment-delete', function (e) {
         if (confirm(wpdiscuzMUJsObj.wmuMsgConfirmAttachmentDelete)) {
             var data = new FormData();
             var clicked = $(this);
             var attachmentId = clicked.data('wmu-attachment');
             data.append('action', 'wmuDeleteAttachment');
-            data.append('wmu_nonce', wpdiscuzMUJsObj.wmuSecurity);
             data.append('attachmentId', attachmentId);
             var ajax = wmuGetAjaxObj(data);
             ajax.done(function (r) {
                 if (r.success) {
-                    $('.wmu-attachment-' + attachmentId).remove();
+                    clicked.parent('.wmu-attachment').remove();
                 } else {
                     if (r.data.error) {
                         alert(r.data.error);
@@ -41,7 +40,7 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $(document).on('change', '.wmu-image-dimension', function () {
+    $('body').on('change', '.wmu-image-dimension', function () {
         var parent = $(this).parents('.wpd-opt-row');
         var wmuSingleImageW = $('.wmu-image-width', parent);
         var wmuSingleImageH = $('.wmu-image-height', parent);
@@ -65,7 +64,7 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $(document).on('keyup', '.wmu-image-dimension', function () {
+    $('body').on('keyup', '.wmu-image-dimension', function () {
         var value = $(this).val();
         $(this).val(value.replace('-', ''));
     });

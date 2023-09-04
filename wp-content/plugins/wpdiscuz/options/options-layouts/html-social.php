@@ -37,7 +37,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="socialLoginInSecondaryForm">
     <div class="wpd-opt-name">
         <label for="socialLoginInSecondaryForm"><?php echo esc_html($setting["options"]["socialLoginInSecondaryForm"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["socialLoginInSecondaryForm"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["socialLoginInSecondaryForm"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -52,10 +52,28 @@ if (!defined("ABSPATH")) {
 <!-- Option end -->
 
 <!-- Option start -->
+<div class="wpd-opt-row" data-wpd-opt="displaySocialAvatar">
+    <div class="wpd-opt-name">
+        <label for="displaySocialAvatar"><?php echo esc_html($setting["options"]["displaySocialAvatar"]["label"]) ?></label>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["displaySocialAvatar"]["description"]) ?></p>
+    </div>
+    <div class="wpd-opt-input">
+        <div class="wpd-switcher">
+            <input type="checkbox" <?php checked($this->social["displaySocialAvatar"] == 1) ?> value="1" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[displaySocialAvatar]" id="displaySocialAvatar">
+            <label for="displaySocialAvatar"></label>
+        </div>
+    </div>
+    <div class="wpd-opt-doc">
+        <?php $this->printDocLink($setting["options"]["displaySocialAvatar"]["docurl"]) ?>
+    </div>
+</div>
+<!-- Option end -->
+
+<!-- Option start -->
 <div class="wpd-opt-row" data-wpd-opt="displayIconOnAvatar">
     <div class="wpd-opt-name">
         <label for="displayIconOnAvatar"><?php echo esc_html($setting["options"]["displayIconOnAvatar"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["displayIconOnAvatar"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["displayIconOnAvatar"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -73,7 +91,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="rememberLoggedinUser">
     <div class="wpd-opt-name">
         <label for="rememberLoggedinUser"><?php echo esc_html($setting["options"]["rememberLoggedinUser"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["rememberLoggedinUser"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["rememberLoggedinUser"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -99,7 +117,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableFbLogin">
     <div class="wpd-opt-name">
         <label for="enableFbLogin"><?php echo esc_html($setting["options"]["enableFbLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableFbLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableFbLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -118,7 +136,7 @@ if (!defined("ABSPATH")) {
     <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="fbUseOAuth2">
         <div class="wpd-opt-name">
             <label for="fbUseOAuth2"><?php echo esc_html($setting["options"]["fbUseOAuth2"]["label"]) ?></label>
-            <p class="wpd-desc"><?php echo $setting["options"]["fbUseOAuth2"]["description"] ?></p>
+            <p class="wpd-desc"><?php echo esc_html($setting["options"]["fbUseOAuth2"]["description"]) ?></p>
         </div>
         <div class="wpd-opt-input">
             <div class="wpd-switcher">
@@ -137,7 +155,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableFbShare">
     <div class="wpd-opt-name">
         <label for="enableFbShare"><?php echo esc_html($setting["options"]["enableFbShare"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableFbShare"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableFbShare"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -155,7 +173,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="fbAppID">
     <div class="wpd-opt-name">
         <label for="fbAppID"><?php echo esc_html($setting["options"]["fbAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["fbAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["fbAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Application ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["fbAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[fbAppID]" id="wpd-fb-app-id" />
@@ -170,7 +188,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="fbAppSecret">
     <div class="wpd-opt-name">
         <label for="fbAppSecret"><?php echo esc_html($setting["options"]["fbAppSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["fbAppSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["fbAppSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Application Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["fbAppSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[fbAppSecret]" id="wpd-fb-app-secret" />
@@ -195,7 +213,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableTwitterLogin">
     <div class="wpd-opt-name">
         <label for="enableTwitterLogin"><?php echo esc_html($setting["options"]["enableTwitterLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableTwitterLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableTwitterLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -213,7 +231,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableTwitterShare">
     <div class="wpd-opt-name">
         <label for="enableTwitterShare"><?php echo esc_html($setting["options"]["enableTwitterShare"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableTwitterShare"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableTwitterShare"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -231,7 +249,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="twitterAppID">
     <div class="wpd-opt-name">
         <label for="twitterAppID"><?php echo esc_html($setting["options"]["twitterAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["twitterAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["twitterAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Consumer Key (API Key)", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["twitterAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[twitterAppID]" id="wpd-twitter-app-id" />
@@ -246,7 +264,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="twitterAppSecret">
     <div class="wpd-opt-name">
         <label for="twitterAppSecret"><?php echo esc_html($setting["options"]["twitterAppSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["twitterAppSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["twitterAppSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Consumer Secret (API Secret)", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["twitterAppSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[twitterAppSecret]" id="wpd-twitter-app-secret" />
@@ -270,7 +288,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableGoogleLogin">
     <div class="wpd-opt-name">
         <label for="enableGoogleLogin"><?php echo esc_html($setting["options"]["enableGoogleLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableGoogleLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableGoogleLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -288,7 +306,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="googleClientID">
     <div class="wpd-opt-name">
         <label for="googleClientID"><?php echo esc_html($setting["options"]["googleClientID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["googleClientID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["googleClientID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Client ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["googleClientID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[googleClientID]" id="wpd-google-client-id" />
@@ -303,7 +321,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="googleClientSecret">
     <div class="wpd-opt-name">
         <label for="googleClientSecret"><?php echo esc_html($setting["options"]["googleClientSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["googleClientSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["googleClientSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Client Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["googleClientSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[googleClientSecret]" id="wpd-google-client-secret" />
@@ -315,6 +333,49 @@ if (!defined("ABSPATH")) {
 <!-- Option end -->
 
 
+
+
+
+<div class="wpd-social-label wpd-telegram" style="padding: 25px 0px 10px 0px;">
+    <img src="<?php echo esc_url_raw(plugins_url(WPDISCUZ_DIR_NAME . "/assets/img/social-icons/telegram.png")); ?>" style="vertical-align:bottom; height: 24px; margin-bottom: -2px; position: relative; border-radius: 50%;">&nbsp; Telegram
+</div>
+<p style="font-size: 14px; font-style: italic; margin-top: 5px;">
+    <?php esc_html_e("To start using Telegram Login Button you should get Telegram API Token for your website. Please follow to this", "wpdiscuz"); ?> <a href="https://wpdiscuz.com/docs/wpdiscuz-7/plugin-settings/social-login-and-share/telegram-bot-configuration/" target="_blank" style="font-weight: 600;"><?php esc_html_e("instruction &raquo;", "wpdiscuz"); ?></a> &nbsp;
+    <?php echo esc_html__("Origin URL", "wpdiscuz") . " : <code>" . get_home_url() . "</code>"; ?>
+</p>
+
+<!-- Option start -->
+<div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableTelegramLogin">
+    <div class="wpd-opt-name">
+        <label for="enableTelegramLogin"><?php echo esc_html($setting["options"]["enableTelegramLogin"]["label"]) ?></label>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableTelegramLogin"]["description"]) ?></p>
+    </div>
+    <div class="wpd-opt-input">
+        <div class="wpd-switcher">
+            <input type="checkbox"<?php checked($this->social["enableTelegramLogin"] == 1); ?> value="1" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[enableTelegramLogin]" id="enableTelegramLogin">
+            <label for="enableTelegramLogin"></label>
+        </div>
+    </div>
+    <div class="wpd-opt-doc">
+        <?php $this->printDocLink($setting["options"]["enableTelegramLogin"]["docurl"]) ?>
+    </div>
+</div>
+<!-- Option end -->
+
+<!-- Option start -->
+<div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="telegramToken">
+    <div class="wpd-opt-name">
+        <label for="telegramAPIToken"><?php echo esc_html($setting["options"]["telegramToken"]["label"]) ?></label>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["telegramToken"]["description"]) ?></p>
+    </div>
+    <div class="wpd-opt-input">
+        <input placeholder="<?php esc_attr_e("API Token", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["telegramToken"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[telegramToken]" id="wpd-telegram-token" />
+    </div>
+    <div class="wpd-opt-doc">
+        <?php $this->printDocLink($setting["options"]["telegramToken"]["docurl"]) ?>
+    </div>
+</div>
+<!-- Option end -->
 
 <div class="wpd-social-label wpd-disqus" style="padding: 25px 0px 10px 0px;">
     <img src="<?php echo esc_url_raw(plugins_url(WPDISCUZ_DIR_NAME . "/assets/img/social-icons/dq-m.png")); ?>" style="vertical-align:bottom; height: 24px; margin-bottom: -2px; position: relative; border-radius: 50%;">&nbsp; Disqus
@@ -328,7 +389,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableDisqusLogin">
     <div class="wpd-opt-name">
         <label for="enableDisqusLogin"><?php echo esc_html($setting["options"]["enableDisqusLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableDisqusLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableDisqusLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -346,7 +407,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="disqusPublicKey">
     <div class="wpd-opt-name">
         <label for="disqusPublicKey"><?php echo esc_html($setting["options"]["disqusPublicKey"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["disqusPublicKey"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["disqusPublicKey"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Public Key", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["disqusPublicKey"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[disqusPublicKey]" id="wpd-disqus-public-key" />
@@ -361,7 +422,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="disqusSecretKey">
     <div class="wpd-opt-name">
         <label for="disqusSecretKey"><?php echo esc_html($setting["options"]["disqusSecretKey"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["disqusSecretKey"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["disqusSecretKey"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Secure Key", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["disqusSecretKey"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[disqusSecretKey]" id="wpd-disqus-secret-key" />
@@ -385,7 +446,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableWordpressLogin">
     <div class="wpd-opt-name">
         <label for="enableWordpressLogin"><?php echo esc_html($setting["options"]["enableWordpressLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableWordpressLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableWordpressLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -403,7 +464,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="wordpressClientID">
     <div class="wpd-opt-name">
         <label for="wordpressClientID"><?php echo esc_html($setting["options"]["wordpressClientID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["wordpressClientID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["wordpressClientID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Client ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["wordpressClientID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[wordpressClientID]" id="wpd-wordpress-client-id" />
@@ -418,7 +479,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="wordpressClientSecret">
     <div class="wpd-opt-name">
         <label for="wordpressClientSecret"><?php echo esc_html($setting["options"]["wordpressClientSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["wordpressClientSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["wordpressClientSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Client Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["wordpressClientSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[wordpressClientSecret]" id="wpd-wordpress-client-secret" />
@@ -440,7 +501,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableInstagramLogin">
     <div class="wpd-opt-name">
         <label for="enableInstagramLogin"><?php echo esc_html($setting["options"]["enableInstagramLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableInstagramLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableInstagramLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -458,7 +519,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="instagramAppID">
     <div class="wpd-opt-name">
         <label for="instagramAppID"><?php echo esc_html($setting["options"]["instagramAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["instagramAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["instagramAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("App ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["instagramAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[instagramAppID]" id="wpd-google-client-id" />
@@ -473,7 +534,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="instagramAppSecret">
     <div class="wpd-opt-name">
         <label for="instagramAppSecret"><?php echo esc_html($setting["options"]["instagramAppSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["instagramAppSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["instagramAppSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("App Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["instagramAppSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[instagramAppSecret]" id="wpd-google-client-secret" />
@@ -496,7 +557,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableLinkedinLogin">
     <div class="wpd-opt-name">
         <label for="enableLinkedinLogin"><?php echo esc_html($setting["options"]["enableLinkedinLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableLinkedinLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableLinkedinLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -514,7 +575,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="linkedinClientID">
     <div class="wpd-opt-name">
         <label for="linkedinClientID"><?php echo esc_html($setting["options"]["linkedinClientID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["linkedinClientID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["linkedinClientID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Client ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["linkedinClientID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[linkedinClientID]" id="wpd-google-client-id" />
@@ -529,7 +590,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="linkedinClientSecret">
     <div class="wpd-opt-name">
         <label for="linkedinClientSecret"><?php echo esc_html($setting["options"]["linkedinClientSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["linkedinClientSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["linkedinClientSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Client Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["linkedinClientSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[linkedinClientSecret]" id="wpd-google-client-secret" />
@@ -548,7 +609,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableWhatsappShare">
     <div class="wpd-opt-name">
         <label for="enableWhatsappShare"><?php echo esc_html($setting["options"]["enableWhatsappShare"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableWhatsappShare"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableWhatsappShare"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -574,7 +635,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableYandexLogin">
     <div class="wpd-opt-name">
         <label for="enableYandexLogin"><?php echo esc_html($setting["options"]["enableYandexLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableYandexLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableYandexLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -592,7 +653,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="yandexID">
     <div class="wpd-opt-name">
         <label for="yandexID"><?php echo esc_html($setting["options"]["yandexID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["yandexID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["yandexID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["yandexID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[yandexID]" id="wpd-google-client-id" />
@@ -607,7 +668,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="yandexPassword">
     <div class="wpd-opt-name">
         <label for="yandexPassword"><?php echo esc_html($setting["options"]["yandexPassword"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["yandexPassword"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["yandexPassword"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Password", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["yandexPassword"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[yandexPassword]" id="wpd-google-client-secret" />
@@ -631,7 +692,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableVkLogin">
     <div class="wpd-opt-name">
         <label for="enableVkLogin"><?php echo esc_html($setting["options"]["enableVkLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableVkLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableVkLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -649,7 +710,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableVkShare">
     <div class="wpd-opt-name">
         <label for="enableVkShare"><?php echo esc_html($setting["options"]["enableVkShare"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableVkShare"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableVkShare"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -667,7 +728,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="vkAppID">
     <div class="wpd-opt-name">
         <label for="vkAppID"><?php echo esc_html($setting["options"]["vkAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["vkAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["vkAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Application ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["vkAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[vkAppID]" id="wpd-vk-app-id" />
@@ -682,7 +743,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="vkAppSecret">
     <div class="wpd-opt-name">
         <label for="vkAppSecret"><?php echo esc_html($setting["options"]["vkAppSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["vkAppSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["vkAppSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Secure Key", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["vkAppSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[vkAppSecret]" id="wpd-vk-app-secret" />
@@ -705,7 +766,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableMailruLogin">
     <div class="wpd-opt-name">
         <label for="enableMailruLogin"><?php echo esc_html($setting["options"]["enableMailruLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableMailruLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableMailruLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -723,7 +784,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="mailruClientID">
     <div class="wpd-opt-name">
         <label for="mailruClientID"><?php echo esc_html($setting["options"]["mailruClientID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["mailruClientID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["mailruClientID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["mailruClientID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[mailruClientID]" id="wpd-google-client-id" />
@@ -738,7 +799,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="mailruClientSecret">
     <div class="wpd-opt-name">
         <label for="mailruClientSecret"><?php echo esc_html($setting["options"]["mailruClientSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["mailruClientSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["mailruClientSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Secret Key", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["mailruClientSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[mailruClientSecret]" id="wpd-google-client-secret" />
@@ -763,7 +824,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableOkLogin">
     <div class="wpd-opt-name">
         <label for="enableOkLogin"><?php echo esc_html($setting["options"]["enableOkLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableOkLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableOkLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -781,7 +842,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableOkShare">
     <div class="wpd-opt-name">
         <label for="enableOkShare"><?php echo esc_html($setting["options"]["enableOkShare"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableOkShare"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableOkShare"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -799,7 +860,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="okAppID">
     <div class="wpd-opt-name">
         <label for="okAppID"><?php echo esc_html($setting["options"]["okAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["okAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["okAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Application ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["okAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[okAppID]" id="wpd-ok-app-id" />
@@ -814,7 +875,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="okAppKey">
     <div class="wpd-opt-name">
         <label for="okAppKey"><?php echo esc_html($setting["options"]["okAppKey"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["okAppKey"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["okAppKey"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Application Key", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["okAppKey"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[okAppKey]" id="wpd-ok-app-key" />
@@ -829,7 +890,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="okAppSecret">
     <div class="wpd-opt-name">
         <label for="okAppSecret"><?php echo esc_html($setting["options"]["okAppSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["okAppSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["okAppSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Application Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["okAppSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[okAppSecret]" id="wpd-ok-app-secret" />
@@ -843,7 +904,7 @@ if (!defined("ABSPATH")) {
     <img src="<?php echo esc_url_raw(plugins_url(WPDISCUZ_DIR_NAME . "/assets/img/social-icons/wechat.png")); ?>" style="vertical-align:bottom; height: 24px; margin-bottom: -2px; position: relative; border-radius: 50%;">&nbsp; WeChat
 </div>
 <p style="font-size: 14px; font-style: italic; margin-top: 5px;">
-    <?php esc_html_e("To start using WeChat Login Button you should get AppID and Secret. Please follow to this ", "wpdiscuz"); ?> <a href="https://learn.akamai.com/en-us/webhelp/identity-cloud/technical-library/GUID-E1F062CD-BC57-45C3-9F0E-4B84470D1B57.html" target="_blank" style="font-weight: 600;"><?php esc_html_e("instruction &raquo;", "wpdiscuz"); ?></a> &nbsp;
+    <?php esc_html_e("To start using WeChat Login Button you should get AppID and Secret. Please follow to this ", "wpdiscuz"); ?> <a href="https://janrain-education-center.knowledgeowl.com/home/wechat-social-login-configuration-guide" target="_blank" style="font-weight: 600;"><?php esc_html_e("instruction &raquo;", "wpdiscuz"); ?></a> &nbsp;
     <?php echo esc_html__("Redirect URI", "wpdiscuz") . " : <code>" . esc_url_raw(admin_url("admin-ajax.php?action=wpd_login_callback&provider=wechat")) . "</code>"; ?>
 </p>
 
@@ -851,7 +912,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableWechatLogin">
     <div class="wpd-opt-name">
         <label for="enableWechatLogin"><?php echo esc_html($setting["options"]["enableWechatLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableWechatLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableWechatLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -869,7 +930,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="wechatAppID">
     <div class="wpd-opt-name">
         <label for="wechatAppID"><?php echo esc_html($setting["options"]["wechatAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["wechatAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["wechatAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("App ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["wechatAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[wechatAppID]" id="wpd-google-client-id" />
@@ -884,7 +945,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="wechatSecret">
     <div class="wpd-opt-name">
         <label for="wechatSecret"><?php echo esc_html($setting["options"]["wechatSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["wechatSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["wechatSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["wechatSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[wechatSecret]" id="wpd-google-client-secret" />
@@ -899,7 +960,7 @@ if (!defined("ABSPATH")) {
     <img src="<?php echo esc_url_raw(plugins_url(WPDISCUZ_DIR_NAME . "/assets/img/social-icons/weibo.png")); ?>" style="vertical-align:bottom; height: 24px; margin-bottom: -2px; position: relative; border-radius: 50%;">&nbsp; Sina Weibo
 </div>
 <p style="font-size: 14px; font-style: italic; margin-top: 5px;">
-    <?php esc_html_e("To start using Weibo Login Button you should get App Key and App Secret. Please follow to this ", "wpdiscuz"); ?> <a href="https://learn.akamai.com/en-us/webhelp/identity-cloud/technical-library/GUID-8B0552FD-A5AE-49D2-9888-C4652FECF33D.html" target="_blank" style="font-weight: 600;"><?php esc_html_e("instruction &raquo;", "wpdiscuz"); ?></a> &nbsp;
+    <?php esc_html_e("To start using Weibo Login Button you should get App Key and App Secret. Please follow to this ", "wpdiscuz"); ?> <a href="https://janrain-education-center.knowledgeowl.com/home/sina-weibo-social-login-configuration-guide" target="_blank" style="font-weight: 600;"><?php esc_html_e("instruction &raquo;", "wpdiscuz"); ?></a> &nbsp;
     <?php echo esc_html__("Redirect URI", "wpdiscuz") . " : <code>" . esc_url_raw(admin_url("admin-ajax.php?action=wpd_login_callback&provider=weibo")) . "</code>"; ?>
 </p>
 
@@ -907,7 +968,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableWeiboLogin">
     <div class="wpd-opt-name">
         <label for="enableWeiboLogin"><?php echo esc_html($setting["options"]["enableWeiboLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableWeiboLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableWeiboLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -925,7 +986,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="weiboKey">
     <div class="wpd-opt-name">
         <label for="weiboKey"><?php echo esc_html($setting["options"]["weiboKey"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["weiboKey"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["weiboKey"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Key", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["weiboKey"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[weiboKey]" id="wpd-google-client-id" />
@@ -940,7 +1001,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="weiboSecret">
     <div class="wpd-opt-name">
         <label for="weiboSecret"><?php echo esc_html($setting["options"]["weiboSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["weiboSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["weiboSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["weiboSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[weiboSecret]" id="wpd-google-client-secret" />
@@ -955,7 +1016,7 @@ if (!defined("ABSPATH")) {
     <img src="<?php echo esc_url_raw(plugins_url(WPDISCUZ_DIR_NAME . "/assets/img/social-icons/qq.png")); ?>" style="vertical-align:bottom; height: 24px; margin-bottom: -2px; position: relative; border-radius: 50%;">&nbsp; Tencent QQ
 </div>
 <p style="font-size: 14px; font-style: italic; margin-top: 5px;">
-    <?php esc_html_e("To start using Tencent QQ Login Button you should get AppID and AppKey. Please follow to this ", "wpdiscuz"); ?> <a href="https://learn.akamai.com/en-us/webhelp/identity-cloud/technical-library/GUID-2B5EC7CA-3EEE-47DC-BC21-D200AED25E22.html" target="_blank" style="font-weight: 600;"><?php esc_html_e("instruction &raquo;", "wpdiscuz"); ?></a> &nbsp;
+    <?php esc_html_e("To start using Tencent QQ Login Button you should get AppID and AppKey. Please follow to this ", "wpdiscuz"); ?> <a href="https://janrain-education-center.knowledgeowl.com/home/qq-social-login-configuration-guide" target="_blank" style="font-weight: 600;"><?php esc_html_e("instruction &raquo;", "wpdiscuz"); ?></a> &nbsp;
     <?php echo esc_html__("Redirect URI", "wpdiscuz") . " : <code>" . esc_url_raw(admin_url("admin-ajax.php?action=wpd_login_callback&provider=qq")) . "</code>"; ?>
 </p>
 
@@ -963,7 +1024,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableQQLogin">
     <div class="wpd-opt-name">
         <label for="enableQQLogin"><?php echo esc_html($setting["options"]["enableQQLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableQQLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableQQLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -981,7 +1042,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="qqAppID">
     <div class="wpd-opt-name">
         <label for="qqAppID"><?php echo esc_html($setting["options"]["qqAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["qqAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["qqAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("App ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["qqAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[qqAppID]" id="wpd-google-client-id" />
@@ -996,7 +1057,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="qqSecret">
     <div class="wpd-opt-name">
         <label for="qqSecret"><?php echo esc_html($setting["options"]["qqSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["qqSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["qqSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["qqSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[qqSecret]" id="wpd-google-client-secret" />
@@ -1019,7 +1080,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="enableBaiduLogin">
     <div class="wpd-opt-name">
         <label for="enableBaiduLogin"><?php echo esc_html($setting["options"]["enableBaiduLogin"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["enableBaiduLogin"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["enableBaiduLogin"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -1037,7 +1098,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="baiduAppID">
     <div class="wpd-opt-name">
         <label for="baiduAppID"><?php echo esc_html($setting["options"]["baiduAppID"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["baiduAppID"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["baiduAppID"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("App ID", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["baiduAppID"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[baiduAppID]" id="wpd-google-client-id" />
@@ -1052,7 +1113,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row wpd-opt-row-tight" data-wpd-opt="baiduSecret">
     <div class="wpd-opt-name">
         <label for="baiduSecret"><?php echo esc_html($setting["options"]["baiduSecret"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["baiduSecret"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["baiduSecret"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input placeholder="<?php esc_attr_e("Secret", "wpdiscuz"); ?>" type="text" value="<?php echo esc_attr($this->social["baiduSecret"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_SOCIAL); ?>[baiduSecret]" id="wpd-google-client-secret" />

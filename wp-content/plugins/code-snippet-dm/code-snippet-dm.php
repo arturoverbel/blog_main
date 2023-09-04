@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -16,7 +15,7 @@
  * Plugin Name:       Code Snippet DM
  * Plugin URI:
  * Description:       Display your code snippets in a stylish way inside your content. The plugin uses shortcodes and also very intuitive TinyMCE interface.
- * Version:           1.3.2
+ * Version:           2.0.2
  * Author:            George Cretu
  * Author URI:        devmaverick.com
  * License:           GPL-2.0+
@@ -35,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CSDM_PLUGIN_NAME_VERSION', '1.3.2' );
+define( 'CSDM_PLUGIN_NAME_VERSION', '2.0.2' );
 
 /**
  * The code that runs during plugin activation.
@@ -45,6 +44,24 @@ function csdm_activate_code_snippet_dm() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-code-snippet-dm-activator.php';
 	CSDM_Activator::csdm_activate();
 }
+
+function csdm_dm_code_snippet_dm_code_snippet_block_init() {   
+	register_block_type( __DIR__ . '/build' );
+}
+add_action( 'init', 'csdm_dm_code_snippet_dm_code_snippet_block_init' );
+
+function csdm_dm_code_snippet_enqueue_to_block() {
+    $plugin_name = 'code-snippet-dm';
+
+    wp_enqueue_style( $plugin_name . '-main-min', plugin_dir_url( __FILE__ ) . 'public/css/main.min.css', array(), CSDM_PLUGIN_NAME_VERSION, 'all' );
+
+    wp_enqueue_script( $plugin_name . '-dm-clipboard', plugin_dir_url( __FILE__ ) . 'public/js/clipboardv201.min.js', array( 'jquery' ), CSDM_PLUGIN_NAME_VERSION, false );
+    wp_enqueue_script( $plugin_name . '-dm-prism', plugin_dir_url( __FILE__ ) . 'public/js/prism.js', array( 'jquery' ), CSDM_PLUGIN_NAME_VERSION, false );
+
+    wp_enqueue_script( $plugin_name . '-dm-manually-start-prism', plugin_dir_url( __FILE__ ) . 'public/js/manually-start-prism.js', array( 'jquery' ), CSDM_PLUGIN_NAME_VERSION, false );
+    wp_enqueue_script( $plugin_name, plugin_dir_url( __FILE__ ) . 'public/js/code-snippet-dm-public.js', array( 'jquery' ), CSDM_PLUGIN_NAME_VERSION, false );
+}
+add_action( 'enqueue_block_assets', 'csdm_dm_code_snippet_enqueue_to_block' );
 
 /**
  * The code that runs during plugin deactivation.

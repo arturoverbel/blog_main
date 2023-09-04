@@ -96,8 +96,10 @@ class CSDM_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-  	wp_enqueue_script( $this->plugin_name . '-dm-clipboard', plugin_dir_url( __FILE__ ) . 'js/clipboard.min.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( $this->plugin_name . '-dm-prism', plugin_dir_url( __FILE__ ) . 'js/prism.js', array( 'jquery' ), $this->version, false );
+  	// wp_enqueue_script( $this->plugin_name . '-dm-clipboard', plugin_dir_url( __FILE__ ) . 'js/clipboard.min.js', array( 'jquery' ), $this->version, false );
+      wp_enqueue_script( $this->plugin_name . '-dm-clipboard', plugin_dir_url( __FILE__ ) . 'js/clipboardv201.min.js', array( 'jquery' ), $this->version, false );
+      wp_enqueue_script( $this->plugin_name . '-dm-prism', plugin_dir_url( __FILE__ ) . 'js/prism.js', array( 'jquery' ), $this->version, false );
+      wp_enqueue_script( $this->plugin_name . '-dm-manually-start-prism', plugin_dir_url( __FILE__ ) . 'js/manually-start-prism.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/code-snippet-dm-public.js', array( 'jquery' ), $this->version, false );
 
 	}

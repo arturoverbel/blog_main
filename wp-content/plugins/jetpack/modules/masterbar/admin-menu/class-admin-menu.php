@@ -7,6 +7,7 @@
 
 namespace Automattic\Jetpack\Dashboard_Customizations;
 
+use Automattic\Jetpack\Assets\Logo;
 use Automattic\Jetpack\Redirect;
 
 require_once __DIR__ . '/class-base-admin-menu.php';
@@ -37,7 +38,6 @@ class Admin_Menu extends Base_Admin_Menu {
 		$this->add_tools_menu();
 		$this->add_options_menu();
 		$this->add_jetpack_menu();
-		$this->add_gutenberg_menus();
 
 		// Remove Links Manager menu since its usage is discouraged. https://github.com/Automattic/wp-calypso/issues/51188.
 		// @see https://core.trac.wordpress.org/ticket/21307#comment:73.
@@ -75,6 +75,20 @@ class Admin_Menu extends Base_Admin_Menu {
 	}
 
 	/**
+	 * Point the Site Editor's `< Dashboard` link to wpcom home.
+	 *
+	 * Although this isn't strictly an admin menu item, it belongs here because it's part of
+	 * changing wp-admin links to their wp.com equivalents.
+	 *
+	 * @param  array $settings Editor settings.
+	 * @return array           Updated Editor settings.
+	 */
+	public function site_editor_dashboard_link( $settings ) {
+		$settings['__experimentalDashboardLink'] = 'https://wordpress.com/home/' . $this->domain;
+		return $settings;
+	}
+
+	/**
 	 * Check if Links Manager is being used.
 	 */
 	public function should_disable_links_manager() {
@@ -93,7 +107,7 @@ class Admin_Menu extends Base_Admin_Menu {
 		);
 
 		// Ordered links by ID descending, check if the first ID is more than $max_default_id.
-		if ( count( $link_manager_links ) > 0 && $link_manager_links[0]->link_id > $max_default_id ) {
+		if ( is_countable( $link_manager_links ) && count( $link_manager_links ) > 0 && $link_manager_links[0]->link_id > $max_default_id ) {
 			return false;
 		}
 
@@ -104,57 +118,14 @@ class Admin_Menu extends Base_Admin_Menu {
 	 * Adds My Home menu.
 	 */
 	public function add_my_home_menu() {
-		$this->update_menu( 'index.php', 'https://wordpress.com/home/' . $this->domain, __( 'My Home', 'jetpack' ), 'manage_options', 'dashicons-admin-home' );
+		$this->update_menu( 'index.php', 'https://wordpress.com/home/' . $this->domain, __( 'My Home', 'jetpack' ), 'edit_posts', 'dashicons-admin-home' );
 	}
 
 	/**
-	 * Adds upsell nudge as a menu.
-	 *
-	 * @param object $nudge The $nudge object containing the content, CTA, link and tracks.
+	 * Adds Inbox menu.
 	 */
-	public function add_upsell_nudge( $nudge ) {
-		$message = '
-<div class="upsell_banner">
-	<div class="banner__info">
-		<div class="banner__title">%1$s</div>
-	</div>
-	<div class="banner__action">
-		<button type="button" class="button">%2$s</button>
-	</div>
-</div>';
-
-		$message = sprintf(
-			$message,
-			wp_kses( $nudge['content'], array() ),
-			wp_kses( $nudge['cta'], array() )
-		);
-
-		add_menu_page( 'site-notices', $message, 'read', 'https://wordpress.com' . $nudge['link'], null, null, 1 );
-		add_filter( 'add_menu_classes', array( $this, 'set_site_notices_menu_class' ) );
-	}
-
-	/**
-	 * Adds a custom element class and id for Site Notices's menu item.
-	 *
-	 * @param array $menu Associative array of administration menu items.
-	 * @return array
-	 */
-	public function set_site_notices_menu_class( array $menu ) {
-		foreach ( $menu as $key => $menu_item ) {
-			if ( 'site-notices' !== $menu_item[3] ) {
-				continue;
-			}
-
-			$classes = ' toplevel_page_site-notices';
-
-			if ( isset( $menu_item[4] ) ) {
-				$menu[ $key ][4] = $menu_item[4] . $classes;
-				$menu[ $key ][5] = 'toplevel_page_site-notices';
-				break;
-			}
-		}
-
-		return $menu;
+	public function add_inbox_menu() {
+		add_menu_page( __( 'Inbox', 'jetpack' ), __( 'Inbox', 'jetpack' ), 'manage_options', 'https://wordpress.com/inbox/' . $this->domain, null, 'dashicons-email', '4.64424' );
 	}
 
 	/**
@@ -187,7 +158,8 @@ class Admin_Menu extends Base_Admin_Menu {
 				$site_upgrades = sprintf(
 					$site_upgrades,
 					__( 'Upgrades', 'jetpack' ),
-					$plan
+					// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+					__( $plan, 'jetpack' )
 				);
 			} else {
 				$site_upgrades = __( 'Upgrades', 'jetpack' );
@@ -196,7 +168,7 @@ class Admin_Menu extends Base_Admin_Menu {
 			add_menu_page( __( 'Upgrades', 'jetpack' ), $site_upgrades, 'manage_options', 'paid-upgrades.php', null, 'dashicons-cart', 4 );
 		}
 
-		add_submenu_page( 'paid-upgrades.php', __( 'Plans', 'jetpack' ), __( 'Plans', 'jetpack' ), 'manage_options', 'https://wordpress.com/plans/my-plan/' . $this->domain, null, 1 );
+		add_submenu_page( 'paid-upgrades.php', __( 'Plans', 'jetpack' ), __( 'Plans', 'jetpack' ), 'manage_options', 'https://wordpress.com/plans/' . $this->domain, null, 1 );
 		add_submenu_page( 'paid-upgrades.php', __( 'Purchases', 'jetpack' ), __( 'Purchases', 'jetpack' ), 'manage_options', 'https://wordpress.com/purchases/subscriptions/' . $this->domain, null, 2 );
 
 		if ( ! $menu_exists ) {
@@ -325,9 +297,6 @@ class Admin_Menu extends Base_Admin_Menu {
 			$default_customize_header_slug_2     => add_query_arg( array( 'autofocus' => array( 'control' => 'header_image' ) ), $customize_url ),
 			$default_customize_background_slug_1 => add_query_arg( array( 'autofocus' => array( 'section' => 'colors_manager_tool' ) ), $customize_url ),
 			$default_customize_background_slug_2 => add_query_arg( array( 'autofocus' => array( 'section' => 'colors_manager_tool' ) ), $customize_url ),
-			'widgets.php'                        => add_query_arg( array( 'autofocus' => array( 'panel' => 'widgets' ) ), $customize_url ),
-			'gutenberg-widgets'                  => add_query_arg( array( 'autofocus' => array( 'panel' => 'widgets' ) ), $customize_url ),
-			'nav-menus.php'                      => add_query_arg( array( 'autofocus' => array( 'panel' => 'nav_menus' ) ), $customize_url ),
 		);
 
 		if ( self::DEFAULT_VIEW === $this->get_preferred_view( 'themes.php' ) ) {
@@ -346,10 +315,6 @@ class Admin_Menu extends Base_Admin_Menu {
 	 * Adds Plugins menu.
 	 */
 	public function add_plugins_menu() {
-		if ( self::CLASSIC_VIEW === $this->get_preferred_view( 'plugins.php' ) ) {
-			return;
-		}
-
 		$this->hide_submenu_page( 'plugins.php', 'plugin-install.php' );
 		$this->hide_submenu_page( 'plugins.php', 'plugin-editor.php' );
 
@@ -410,13 +375,46 @@ class Admin_Menu extends Base_Admin_Menu {
 			$submenus_to_update['options-writing.php'] = 'https://wordpress.com/settings/writing/' . $this->domain;
 		}
 
+		if ( self::DEFAULT_VIEW === $this->get_preferred_view( 'options-reading.php' )
+		) {
+			$submenus_to_update['options-reading.php'] = 'https://wordpress.com/settings/reading/' . $this->domain;
+		}
+
 		if ( self::DEFAULT_VIEW === $this->get_preferred_view( 'options-discussion.php' ) ) {
 			$submenus_to_update['options-discussion.php'] = 'https://wordpress.com/settings/discussion/' . $this->domain;
 		}
 
 		$this->update_submenus( 'options-general.php', $submenus_to_update );
 
-		add_submenu_page( 'options-general.php', esc_attr__( 'Performance', 'jetpack' ), __( 'Performance', 'jetpack' ), 'manage_options', 'https://wordpress.com/settings/performance/' . $this->domain, null, 1 );
+		if (
+			/**
+			 * Filter to enable the Newsletter Settings section in Calypso UI.
+			 *
+			 * @since 12.5
+			 * @module masterbar
+			 *
+			 * @param bool false Enable newsletter setting section? Default to false.
+			 */
+			apply_filters( 'calypso_use_newsletter_settings', false )
+		) {
+			add_submenu_page( 'options-general.php', esc_attr__( 'Newsletter', 'jetpack' ), __( 'Newsletter', 'jetpack' ), 'manage_options', 'https://wordpress.com/settings/newsletter/' . $this->domain, null, 7 );
+		}
+
+		if (
+			/**
+			 * Filter to enable the Podcasting Settings section in Calypso UI.
+			 *
+			 * @since 12.5
+			 * @module masterbar
+			 *
+			 * @param bool false Enable podcasting setting section? Default to false.
+			 */
+			apply_filters( 'calypso_use_podcasting_settings', false )
+		) {
+			add_submenu_page( 'options-general.php', esc_attr__( 'Podcasting', 'jetpack' ), __( 'Podcasting', 'jetpack' ), 'manage_options', 'https://wordpress.com/settings/podcasting/' . $this->domain, null, 8 );
+		}
+
+		add_submenu_page( 'options-general.php', esc_attr__( 'Performance', 'jetpack' ), __( 'Performance', 'jetpack' ), 'manage_options', 'https://wordpress.com/settings/performance/' . $this->domain, null, 9 );
 	}
 
 	/**
@@ -425,9 +423,7 @@ class Admin_Menu extends Base_Admin_Menu {
 	public function add_jetpack_menu() {
 		$this->add_admin_menu_separator( 50, 'manage_options' );
 
-		// TODO: Replace with proper SVG data url.
-		$icon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 40 40' %3E%3Cpath fill='%23a0a5aa' d='M20 0c11.046 0 20 8.954 20 20s-8.954 20-20 20S0 31.046 0 20 8.954 0 20 0zm11 17H21v19l10-19zM19 4L9 23h10V4z'/%3E%3C/svg%3E";
-
+		$icon            = ( new Logo() )->get_base64_logo();
 		$is_menu_updated = $this->update_menu( 'jetpack', null, null, null, $icon, 51 );
 		if ( ! $is_menu_updated ) {
 			add_menu_page( esc_attr__( 'Jetpack', 'jetpack' ), __( 'Jetpack', 'jetpack' ), 'manage_options', 'jetpack', null, $icon, 51 );
@@ -435,8 +431,6 @@ class Admin_Menu extends Base_Admin_Menu {
 
 		add_submenu_page( 'jetpack', esc_attr__( 'Activity Log', 'jetpack' ), __( 'Activity Log', 'jetpack' ), 'manage_options', 'https://wordpress.com/activity-log/' . $this->domain, null, 2 );
 		add_submenu_page( 'jetpack', esc_attr__( 'Backup', 'jetpack' ), __( 'Backup', 'jetpack' ), 'manage_options', 'https://wordpress.com/backup/' . $this->domain, null, 3 );
-		/* translators: Jetpack sidebar menu item. */
-		add_submenu_page( 'jetpack', esc_attr__( 'Search', 'jetpack' ), __( 'Search', 'jetpack' ), 'manage_options', 'https://wordpress.com/jetpack-search/' . $this->domain, null, 4 );
 
 		$this->hide_submenu_page( 'jetpack', 'jetpack#/settings' );
 		$this->hide_submenu_page( 'jetpack', 'stats' );
@@ -450,52 +444,85 @@ class Admin_Menu extends Base_Admin_Menu {
 	}
 
 	/**
-	 * Update Site Editor menu item's link and position.
+	 * Add the calypso /woocommerce-installation/ menu item.
+	 *
+	 * @param array $current_plan The site's plan if they have one. This is passed from WPcom_Admin_Menu to prevent
+	 * redundant database queries.
 	 */
-	public function add_gutenberg_menus() {
-		if ( self::CLASSIC_VIEW === $this->get_preferred_view( 'admin.php?page=gutenberg-edit-site' ) ) {
-			return;
-		}
+	public function add_woocommerce_installation_menu( $current_plan = null ) {
+		/**
+		 * Whether to show the WordPress.com WooCommerce Installation menu.
+		 *
+		 * @use add_filter( 'jetpack_show_wpcom_woocommerce_installation_menu', '__return_true' );
+		 * @module masterbar
+		 * @since 10.3.0
+		 * @param bool $jetpack_show_wpcom_woocommerce_installation_menu Load the WordPress.com WooCommerce Installation menu item. Default to false.
+		 * @param array $current_plan Data about the current site's plan.
+		 */
+		if ( apply_filters( 'jetpack_show_wpcom_woocommerce_installation_menu', false, $current_plan ) ) {
+			$this->add_admin_menu_separator( 54, 'activate_plugins' );
 
-		$this->update_menu( 'gutenberg-edit-site', 'https://wordpress.com/site-editor/' . $this->domain, null, null, null, 59 );
+			$icon_url = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGZpbGw9IiNhMmFhYjIiIGQ9Ik02MTIuMTkyIDQyNi4zMzZjMC02Ljg5Ni0zLjEzNi01MS42LTI4LTUxLjYtMzcuMzYgMC00Ni43MDQgNzIuMjU2LTQ2LjcwNCA4Mi42MjQgMCAzLjQwOCAzLjE1MiA1OC40OTYgMjguMDMyIDU4LjQ5NiAzNC4xOTItLjAzMiA0Ni42NzItNzIuMjg4IDQ2LjY3Mi04OS41MnptMjAyLjE5MiAwYzAtNi44OTYtMy4xNTItNTEuNi0yOC4wMzItNTEuNi0zNy4yOCAwLTQ2LjYwOCA3Mi4yNTYtNDYuNjA4IDgyLjYyNCAwIDMuNDA4IDMuMDcyIDU4LjQ5NiAyNy45NTIgNTguNDk2IDM0LjE5Mi0uMDMyIDQ2LjY4OC03Mi4yODggNDYuNjg4LTg5LjUyek0xNDEuMjk2Ljc2OGMtNjguMjI0IDAtMTIzLjUwNCA1NS40ODgtMTIzLjUwNCAxMjMuOTJ2NjUwLjcyYzAgNjguNDMyIDU1LjI5NiAxMjMuOTIgMTIzLjUwNCAxMjMuOTJoMzM5LjgwOGwxMjMuNTA0IDEyMy45MzZWODk5LjMyOGgyNzguMDQ4YzY4LjIyNCAwIDEyMy41Mi01NS40NzIgMTIzLjUyLTEyMy45MnYtNjUwLjcyYzAtNjguNDMyLTU1LjI5Ni0xMjMuOTItMTIzLjUyLTEyMy45MmgtNzQxLjM2em01MjYuODY0IDQyMi4xNmMwIDU1LjA4OC0zMS4wODggMTU0Ljg4LTEwMi42NCAxNTQuODgtNi4yMDggMC0xOC40OTYtMy42MTYtMjUuNDI0LTYuMDE2LTMyLjUxMi0xMS4xNjgtNTAuMTkyLTQ5LjY5Ni01Mi4zNTItNjYuMjU2IDAgMC0zLjA3Mi0xNy43OTItMy4wNzItNDAuNzUyIDAtMjIuOTkyIDMuMDcyLTQ1LjMyOCAzLjA3Mi00NS4zMjggMTUuNTUyLTc1LjcyOCA0My41NTItMTA2LjczNiA5Ni40NDgtMTA2LjczNiA1OS4wNzItLjAzMiA4My45NjggNTguNTI4IDgzLjk2OCAxMTAuMjA4ek00ODYuNDk2IDMwMi40YzAgMy4zOTItNDMuNTUyIDE0MS4xNjgtNDMuNTUyIDIxMy40MjR2NzUuNzEyYy0yLjU5MiAxMi4wOC00LjE2IDI0LjE0NC0yMS44MjQgMjQuMTQ0LTQ2LjYwOCAwLTg4Ljg4LTE1MS40NzItOTIuMDE2LTE2MS44NC02LjIwOCA2Ljg5Ni02Mi4yNCAxNjEuODQtOTYuNDQ4IDE2MS44NC0yNC44NjQgMC00My41NTItMTEzLjY0OC00Ni42MDgtMTIzLjkzNkMxNzYuNzA0IDQzNi42NzIgMTYwIDMzNC4yMjQgMTYwIDMyNy4zMjhjMC0yMC42NzIgMS4xNTItMzguNzM2IDI2LjA0OC0zOC43MzYgNi4yMDggMCAyMS42IDYuMDY0IDIzLjcxMiAxNy4xNjggMTEuNjQ4IDYyLjAzMiAxNi42ODggMTIwLjUxMiAyOS4xNjggMTg1Ljk2OCAxLjg1NiAyLjkyOCAxLjUwNCA3LjAwOCA0LjU2IDEwLjQzMiAzLjE1Mi0xMC4yODggNjYuOTI4LTE2OC43ODQgOTQuOTYtMTY4Ljc4NCAyMi41NDQgMCAzMC40IDQ0LjU5MiAzMy41MzYgNjEuODI0IDYuMjA4IDIwLjY1NiAxMy4wODggNTUuMjE2IDIyLjQxNiA4Mi43NTIgMC0xMy43NzYgMTIuNDgtMjAzLjEyIDY1LjM5Mi0yMDMuMTIgMTguNTkyLjAzMiAyNi43MDQgNi45MjggMjYuNzA0IDI3LjU2OHpNODcwLjMyIDQyMi45MjhjMCA1NS4wODgtMzEuMDg4IDE1NC44OC0xMDIuNjQgMTU0Ljg4LTYuMTkyIDAtMTguNDQ4LTMuNjE2LTI1LjQyNC02LjAxNi0zMi40MzItMTEuMTY4LTUwLjE3Ni00OS42OTYtNTIuMjg4LTY2LjI1NiAwIDAtMy44ODgtMTcuOTItMy44ODgtNDAuODk2czMuODg4LTQ1LjE4NCAzLjg4OC00NS4xODRjMTUuNTUyLTc1LjcyOCA0My40ODgtMTA2LjczNiA5Ni4zODQtMTA2LjczNiA1OS4xMDQtLjAzMiA4My45NjggNTguNTI4IDgzLjk2OCAxMTAuMjA4eiIvPjwvc3ZnPg==';
+			$menu_url = 'https://wordpress.com/woocommerce-installation/' . $this->domain;
+
+			// Only show the menu if the user has the capability to activate_plugins.
+			add_menu_page( esc_attr__( 'WooCommerce', 'jetpack' ), esc_attr__( 'WooCommerce', 'jetpack' ), 'activate_plugins', $menu_url, null, $icon_url, 55 );
+		}
 	}
 
 	/**
-	 * Adds Beta Testing link.
+	 * AJAX handler for retrieving the upsell nudge.
 	 */
-	public function add_beta_testing_menu() {
-		$icon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxOCAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1LjE5MDEgMTAuODU2N0MxNC45NTc0IDEwLjYyNCAxNC42NjExIDEwLjQ2NTQgMTQuMzM4NCAxMC40MDA4TDEyLjM0OTMgMTAuMDAzM0MxMS4yNTkgOS43ODUzIDEwLjEyNzEgOS45MzY5IDkuMTMyNjIgMTAuNDM0Mkw4Ljg2NzYxIDEwLjU2NThDNy44NzMxMiAxMS4wNjMxIDYuNzQxMjUgMTEuMjE0NyA1LjY1MDk1IDEwLjk5NjdMNC4wNDE3OCAxMC42NzVDMy43NzI3OCAxMC42MjEzIDMuNDk0NjggMTAuNjM0OCAzLjIzMjE0IDEwLjcxNDNDMi45Njk2MSAxMC43OTM4IDIuNzMwNzYgMTAuOTM2OSAyLjUzNjc4IDExLjEzMDhNNC42NjY3OCAxLjMzMzM0SDEzLjMzMzRMMTEuNTAwMSAyLjE2NjY4VjYuNDc2NjhDMTEuNTAwMiA2LjkxODY3IDExLjY3NTkgNy4zNDI1MiAxMS45ODg0IDcuNjU1MDFMMTYuMTU1MSAxMS44MjE3QzE3LjIwNTEgMTIuODcxNyAxNi40NjA5IDE0LjY2NjcgMTQuOTc1OSAxNC42NjY3SDMuMDIzNDVDMS41Mzg0NSAxNC42NjY3IDAuNzk1MTE2IDEyLjg3MTcgMS44NDUxMiAxMS44MjE3TDYuMDExNzggNy42NTUwMUM2LjMyNDM2IDcuMzQyNTIgNi41MDAwMiA2LjkxODY3IDYuNTAwMTEgNi40NzY2OFYyLjE2NjY4TDQuNjY2NzggMS4zMzMzNFoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJiZXZlbCIvPgo8cmVjdCB4PSIxLjcyNzU0IiB5PSIxMC43MjczIiB3aWR0aD0iMTQuNTQ1NSIgaGVpZ2h0PSIzLjYzNjM2IiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K';
-		add_menu_page( 'beta-testing', __( 'Beta Testing', 'jetpack' ), 'manage_options', 'https://wordpress.com/beta-testing/' . $this->domain, null, $icon, null );
+	public function wp_ajax_upsell_nudge_jitm() {
+		check_ajax_referer( 'upsell_nudge_jitm' );
+
+		$nudge = $this->get_upsell_nudge();
+		if ( ! $nudge ) {
+			wp_die();
+		}
+
+		$link = $nudge['link'];
+		if ( substr( $link, 0, 1 ) === '/' ) {
+			$link = 'https://wordpress.com' . $link;
+		}
+		?>
+		<li class="wp-not-current-submenu menu-top menu-icon-generic toplevel_page_site-notices" id="toplevel_page_site-notices">
+			<a href="<?php echo esc_url( $link ); ?>" class="wp-not-current-submenu menu-top menu-icon-generic toplevel_page_site-notices">
+				<div class="wp-menu-arrow">
+					<div></div>
+				</div>
+				<div class="wp-menu-image dashicons-before dashicons-admin-generic" aria-hidden="true"><br></div>
+				<div class="wp-menu-name">
+					<div class="upsell_banner">
+						<div class="banner__info">
+							<div class="banner__title">
+								<?php echo wp_kses( $nudge['content'], array() ); ?>
+							</div>
+						</div>
+						<div class="banner__action">
+							<button type="button" class="button">
+								<?php echo wp_kses( $nudge['cta'], array() ); ?>
+							</button>
+						</div>
+						<?php if ( $nudge['dismissible'] ) : ?>
+							<svg xmlns="http://www.w3.org/2000/svg" data-feature_class="<?php echo esc_attr( $nudge['feature_class'] ); ?>" data-feature_id="<?php echo esc_attr( $nudge['id'] ); ?>" viewBox="0 0 24 24" class="gridicon gridicons-cross dismissible-card__close-icon" height="24" width="24"><g><path d="M18.36 19.78L12 13.41l-6.36 6.37-1.42-1.42L10.59 12 4.22 5.64l1.42-1.42L12 10.59l6.36-6.36 1.41 1.41L13.41 12l6.36 6.36z"></path></g></svg>
+						<?php endif; ?>
+					</div>
+				</div>
+			</a>
+		</li>
+		<?php
+		wp_die();
 	}
 
 	/**
-	 * Prepend a dashboard swithcer to the "Screen Options" box of the current page.
-	 * Callback for the 'screen_settings' filter (available in WP 3.0 and up).
+	 * Returns the first available upsell nudge.
+	 * Needs to be implemented separately for each child menu class.
+	 * Empty by default.
 	 *
-	 * @param string $current The currently added panels in screen options.
-	 *
-	 * @return string The HTML code to append to "Screen Options"
+	 * @return array
 	 */
-	public function register_dashboard_switcher( $current ) {
-		$menu_mappings = require __DIR__ . '/menu-mappings.php';
-		$screen        = $this->get_current_screen();
-
-		// Let's show the switcher only in screens that we have a Calypso mapping to switch to.
-		if ( ! isset( $menu_mappings[ $screen ] ) ) {
-			return;
-		}
-
-		$contents = sprintf(
-			'<div id="dashboard-switcher"><h5>%s</h5><p class="dashboard-switcher-text">%s</p><a class="button button-primary dashboard-switcher-button" href="%s">%s</a></div>',
-			__( 'Screen features', 'jetpack' ),
-			__( 'Currently you are seeing the classic WP-Admin view of this page. Would you like to see the default WordPress.com view?', 'jetpack' ),
-			$menu_mappings[ $screen ] . $this->domain,
-			__( 'Use WordPress.com view', 'jetpack' )
-		);
-
-		// Prepend the Dashboard swither to the other custom panels.
-		$current = $contents . $current;
-
-		return $current;
+	public function get_upsell_nudge() {
+		return array();
 	}
 }

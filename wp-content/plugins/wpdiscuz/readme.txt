@@ -2,8 +2,8 @@
 Contributors: gVectors Team
 Tags: comment, comments, ajax comments, comment form, comment fields
 Requires at least: 5.0
-Tested up to: 5.8
-Stable tag: 7.3.2
+Tested up to: 6.2
+Stable tag: 7.6.3
 Requires PHP: 5.6 and higher
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -73,12 +73,14 @@ wpDiscuz version 7 is a revolutionary perspective on the commenting world! This 
 * Sticky Comments
 * Closed Comments Threads (disable replies)
 * Subscribe to User / User Follow
+* Built-in comment and comment author caching system
 
 
 = Add-ons =
 
 * | [wpDiscuz - Bundle](https://gvectors.com/product/wpdiscuz-addons-bundle/)
 * | [wpDiscuz - Emoticons](https://gvectors.com/product/wpdiscuz-emoticons/)
+* | [wpDiscuz - User Notifications](https://gvectors.com/product/wpdiscuz-user-notifications/)
 * | [wpDiscuz - Media Uploader](https://gvectors.com/product/wpdiscuz-media-uploader/)
 * | [wpDiscuz - Embeds](https://gvectors.com/product/wpdiscuz-embeds/)
 * | [wpDiscuz - Comment Author Info](https://gvectors.com/product/wpdiscuz-comment-author-info/)
@@ -92,16 +94,17 @@ wpDiscuz version 7 is a revolutionary perspective on the commenting world! This 
 * | [wpDiscuz - Ads Manager](https://gvectors.com/product/wpdiscuz-ads-manager/)
 * | [wpDiscuz - User & Comment Mentioning](https://gvectors.com/product/wpdiscuz-user-comment-mentioning/)
 * | [wpDiscuz - Advanced Likers](https://gvectors.com/product/wpdiscuz-advanced-likers/)
-* | [wpDiscuz - Comments Censure](https://gvectors.com/product/comments-censure-pro/)
 * | [wpDiscuz - Online Users](https://gvectors.com/product/wpdiscuz-online-users/)
 * | [wpDiscuz - Private Comments](https://gvectors.com/product/wpdiscuz-private-comments/)
 * | [wpDiscuz - Syntax Highlighter](https://gvectors.com/product/wpdiscuz-syntax-highlighter/)
-* | [wpDiscuz - Voice Commenting](https://gvectors.com/product/wpdiscuz-voice-commenting/)
+* | [Comments Censure PRO](https://gvectors.com/product/comments-censure-pro/)
 
 = Integration Add-ons =
 
 * | [wpDiscuz - BuddyPress Integration](https://gvectors.com/product/wpdiscuz-buddypress-integration/)
 * | [wpDiscuz - Tenor GIFs Integration](https://gvectors.com/product/wpdiscuz-tenor-integration/)
+* | [wpDiscuz - GIPHY Integration](https://gvectors.com/product/wpdiscuz-giphy-integration/)
+* | [wpDiscuz - Voice Commenting](https://gvectors.com/product/wpdiscuz-voice-commenting/)
 
 
 == Installation ==
@@ -180,20 +183,227 @@ Nothing will be lost!  **Comments - wpDiscuz** will show all old comments.
 12. wpDiscuz Single Settings Page | Screenshot #12
 
 
-
 == Changelog ==
+
+= Comments - wpDiscuz v7.6.3 - 12.08.2023 =
+
+* Fixed: Issue with nonces
+* Fixed: Accessibility issues
+
+**IMPORTANT!**
+
+* Please don't forget delete all caches and purge CDN after the update.
+
+= Comments - wpDiscuz v7.6.2 - 08.08.2023 =
+
+* Fixed: Issue with displaying guest default avatar on comment form
+* Fixed: Issue with initiating current user data
+* Fixed: Issue with caches ( wpDiscuz didn't clean caches on comment adding or editing (website URL). Security fix )
+* Fixed: Preventing comments duplications on comment editing
+
+= Comments - wpDiscuz v7.6.1 - 03.06.2023 =
+
+* Added: An option to enable subscription bar for guests
+* Added: An option to enable subscription bar for roles
+* Added: A new hook "wpdiscuz_commentlist_liveupdate_timer" to control live update check frequency
+* Added: A new hook "wpdiscuz_email_subject" to allow to change the subject of subscription notification email
+* Added: A new hook "wpdiscuz_confirm_email_subject" to allow to change the subject of confirmation email
+* Added: A new hook "wpdiscuz_confirm_email_content" to allow to change the content of confirmation email
+* Added: Nofollow, noindex on internal anchors to prevent google crawling
+* Fixed: Comment reply text max length is issue on reply forms
+
+= Comments - wpDiscuz v7.6.0 - 26.04.2023 =
+
+* Added: Support of Telegram login
+* Added: Support of Gutenberg blocks
+* Added: New hook ('wpdiscuz_comment_form_args') on comment form attributes
+* Fixed: Line breaks in textarea custom field
+
+= Comments - wpDiscuz v7.5.4 - 28.03.2023 =
+
+* Fixed: Fatal error in Ukrainian localization
+* Fixed: Issues with email templates translations
+* Added: Compatibility with WordPress 6.2 version
+
+= Comments - wpDiscuz v7.5.3 - 20.02.2023 =
+
+* Fixed: An error on adding custom capabilities to admin user role
+* Fixed: No such file found warning on wpDiscuz's default theme path
+* Fixed: A conflict with WordPress VIP
+* Added: Check if wpDiscuz's theme files are readable
+
+= Comments - wpDiscuz v7.5.2 - 16.12.2022 =
+
+* Fixed Bug: Subscription form conflict with google Recaptcha
+* Added: A new hook to exclude comments by type in wpDiscuz dashboard's statistics
+
+= Comments - wpDiscuz v7.5.1 - 30.11.2022 =
+
+* Fixed Bug: View Comments button is not disappearing after comments sorting
+* Fixed Bug: Subscription form conflict with reCaptcha
+
+= Comments - wpDiscuz v7.5 - 12.10.2022 =
+
+* Fixed Bug: Compatibility with wpForo user profiles
+* Fixed Bug: Checkbox field save issue in HTML field type
+* Fixed Bug: Compatibility issue with Akismet
+* Fixed Vulnerability: Insecure Direct Object References (IDOR)
+
+= Comments - wpDiscuz v7.4.2 - 12.08.2022 =
+
+* Fixed Bug: Undefined array key "wp_lang"
+
+= Comments - wpDiscuz v7.4.1 - 11.08.2022 =
+
+* Added: Support for dynamic language switcher on WP login page
+
+= Comments - wpDiscuz v7.4 - 09.08.2022 =
+
+* Added: Fields displaying options (logged-in users | guests)
+* Added: Allowing empty comments using a hook - 'allow_empty_comment'
+* Fixed Bug: Supporting plus(+) sign in name or email fields
+* Fixed Bug: Some of the field(s) are invalid unknown error
+* Fixed Bug: Getting comment form in correct locale set by user
+* Fixed Bug: Compatibility with Akismet plugin (on edit comment)
+
+= Comments - wpDiscuz v7.3.20 - 20.07.2022 =
+
+* Fixed bug: document.querySelectorAll().forEach is not a function. (old browsers)
+* Fixed bug: Restriction commenting by roles doesn't work until the page refresh
+* Fixed bug: Comment rating calculation issue
+* Added: new wpd-blog-[role-name]  class for every registered user
+* Added: Template function to get all options - wpdiscuzGetOptions()
+* Added: Template function to get single option by key / (tab optional) - wpDiscuzGetOption($key, $tab)
+
+= Comments - wpDiscuz v7.3.19 - 15.06.2022 =
+
+* Fixed bug: Uncaught TypeError: array_key_exists()
+
+= Comments - wpDiscuz v7.3.18 - 14.06.2022 =
+
+* Added: Preventing multiple clicks on subscription button
+* Fixed Bug: Problem with comments Lazy Loading of mobile devices
+* Fixed Bug: jQuery events not triggered
+* Fixed Bug: Problem with most reacted comment
+* Fixed Bug: Cache conflict with voting buttons highlighting
+* Fixed Bug: Problems with Subscription, Follow and other notification messages
+* Fixed Bug: Untranslated UI element, reply button in the bubble notification area
+* Fixed Bug: PHP Error: Undefined variable $options in sanitizer function
+* Fixed Bug: Warning - Illegal string offset 'enable_post_rating'
+* Fixed Bug: PHP Fatal error: Cannot use string offset as an array in class.WpdiscuzWalker.php:45
+* Fixed Bug: PHP Fatal error: array_key_exists() in Form.php (when creating a new form)
+* Fixed Bug: PHP Fatal error: Call to a member function get_children() on null in class.WpdiscuzHelper.php:421
+
+= Comments - wpDiscuz v7.3.17 - 30.03.2022 =
+
+* Fixed Bug: Conflict with Redis based cache plugins
+* Fixed Bug: Conflict with Memcached based cache plugins
+
+
+= Comments - wpDiscuz v7.3.16 - 19.03.2022 =
+
+* Fixed Bug: Deactivation issues
+
+
+= Comments - wpDiscuz v7.3.14 / v7.3.15 - 19.03.2022 =
+
+* Fixed Bug: wpdiscuz-ajax not found
+
+
+= Comments - wpDiscuz v7.3.13 - 19.03.2022 =
+
+* Modified: Exclude WooCommerce "order_note" comment type from statistics
+* Fixed Bug: PHP Warning:  filemtime(): stat failed
+* Fixed Bug: Trying to access array offset on value of type null
+* Fixed Phrase: Change word "Subscrption" to "Subscription" in translations files(.po,.mo)
+* Added: New hooks for controlling new subscriptions
+* Added: `do_action("wpdiscuz_add_email_notification_success", $subsriptionId, $postId, $email, $subscriptionType, $confirm);`
+* Added: `do_action("wpdiscuz_add_email_notification_fail", $subsriptionId, $postId, $email, $subscriptionType, $confirm);`
+
+
+= Comments - wpDiscuz v7.3.12 - 10.02.2022 =
+
+* Fixed Bug: Issues with the validation of the 'wmuMaxFileSize' variable
+* Fixed Bug: Compatibility with the Twenty Twenty Two theme
+* Fixed Bug: Issues on cache files removing
+* Fixed Bug: More secure way of backup for options and phrases
+* Fixed Bug: Error when submitting the import options/phrases form without a file
+
+= Comments - wpDiscuz v7.3.11 - 25.01.2022 =
+
+* Added: WordPress v5.9 compatibility
+* Changed: The users @nicename for mentions hidden by default
+
+= Comments - wpDiscuz v7.3.10 - 13.01.2022 =
+
+* Added: Option to display Social Networks Avatars
+* Added: Comments left text on load more button by hooks
+* Added: A new hook wpdiscuz_show_comments_left for displaying the count of the parent comments left on the "Load more" button.
+* Added: A new hook wpdiscuz_comments_left_text for changing the text, that displays the number of the parent comments that are not displayed yet on the "Load more" button.
+* Fixed Bug: Small issue with load rest of comments option
+* Fixed Bug: Caching issue with user roles
+* Fixed Bug: Conflict with Redis or Memcached
+* Fixed Bug: Fatal error on unserializing votes data
+
+= Comments - wpDiscuz v7.3.9 =
+
+* Fixed bug: Comment cache issue when the native pagination is enabled
+* Fixed bug: Custom comment form date is not saved if the status is not published.
+* Fixed bug: Irregular missing of user labels.
+* Fixed bug: Redirect to the same page after clicking the reset option button
+* Fixed bug: Comment filtering issue in widgets, changed wp_trim_words() to get_comment_excerpt().
+* Fixed bug: Display mentioned user name without a link to profile page when the Profile URL option is disabled.
+
+
+= Comments - wpDiscuz v7.3.8 =
+
+* Added: New option in the media library drop-down to filter the media files uploaded in comments
+* Added: A new hook 'wpdiscuz_validate_nonce_for_guests' for enabling/disabling nonce validation for guests (disabled by default)
+* Fixed bug: Media file URL issue when SSL is enabled
+* Fixed bug: Issues with user mentioning by user nicename
+* Fixed bug: Prevent caching of comments when the native pagination is enabled
+* Fixed bug: Issue with Custom CSS
+* Fixed bug: Wrong names in email content when a new comment has been posted by the following user
+* Fixed bug: 'Stick' and 'Close' comments' buttons were visible on the main comment form even when they were disabled from the settings
+* New Addon: [wpDiscuz - User Notifications](https://gvectors.com/product/wpdiscuz-user-notifications/)
+
+
+= Comments - wpDiscuz v7.3.6 / v7.3.7 =
+
+* Fixed bug: Nonce is invalid with the wpDiscuz AJAX function.
+
+
+= Comments - wpDiscuz v7.3.5 =
+
+* Fixed bug: Proper escaping && sanitization of variables
+* Fixed bug: Nonce is invalid, conflict with cache plugins
+* Fixed bug: Problem with Comment Fields Background option
+* Fixed bug: Problem with Edit Button (Allow comment editing for "Unlimited" time) option
+
+
+= Comments - wpDiscuz v7.3.4 =
+
+
+* Fixed bug: Small security issue, wp_nonce verification to all ajax actions
+* Fixed Bug: Issues with "sticky" and "closed" comments
+* Fixed Bug: PHP Error - Too few arguments to function cleanCommentRelatedRows()
+* Fixed Bug: Comments still can be deleted by user from "My contents and settings" popup even when deleting is disabled in "Front End Moderation" addon.
+
+
+= Comments - wpDiscuz v7.3.3 =
+
+* Fixed Bug: Replies made from dashboard are invisible
+* Fixed Bug: Most voted comments are not loading
+* Fixed Bug: VK social login issue
+
 
 = Comments - wpDiscuz v7.3.2 =
 
 * Added: Better UI for option search in wpDiscuz settings page
 * Changed: Reducing plugin links in the dashboard plugin activation page
-* Fixed: Small security issues with data filtering, preventing XSS attacks
-* Fixed: Fatal Error - Uncaught Error, cannot use string offset as an array
-* Fixed: Fatal Error - Too few arguments to function cleanCommentRelatedRows()
-
-**IMPORTANT!**
-
-* Please don't forget delete all caches and purge CDN after the update.
+* Fixed Bug: Small security issues with data filtering, preventing XSS attacks
+* Fixed Bug: Fatal Error - Uncaught Error, cannot use string offset as an array
+* Fixed Bug: Fatal Error - Too few arguments to function cleanCommentRelatedRows()
 
 
 = Comments - wpDiscuz v7.3.1 =

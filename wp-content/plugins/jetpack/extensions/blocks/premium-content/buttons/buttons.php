@@ -18,15 +18,12 @@ const BUTTONS_NAME = 'premium-content/buttons';
  * registration if we need to.
  */
 function register_buttons_block() {
-	// Only load this block on WordPress.com.
-	if ( ( defined( 'IS_WPCOM' ) && IS_WPCOM ) || jetpack_is_atomic_site() ) {
-		Blocks::jetpack_register_block(
-			BUTTONS_NAME,
-			array(
-				'render_callback' => __NAMESPACE__ . '\render_buttons_block',
-			)
-		);
-	}
+	Blocks::jetpack_register_block(
+		BUTTONS_NAME,
+		array(
+			'render_callback' => __NAMESPACE__ . '\render_buttons_block',
+		)
+	);
 }
 add_action( 'init', __NAMESPACE__ . '\register_buttons_block' );
 

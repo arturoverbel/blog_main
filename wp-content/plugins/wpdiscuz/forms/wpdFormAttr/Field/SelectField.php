@@ -2,6 +2,8 @@
 
 namespace wpdFormAttr\Field;
 
+use wpdFormAttr\Tools\Sanitizer;
+
 class SelectField extends Field {
 
     protected function dashboardForm() {
@@ -41,6 +43,14 @@ class SelectField extends Field {
                 <label for="<?php echo esc_attr($this->fieldInputName); ?>[is_show_on_comment]"><?php esc_html_e("Display on comment", "wpdiscuz"); ?>:</label> 
                 <input type="checkbox" value="1" <?php checked($this->fieldData["is_show_on_comment"], 1, true); ?> name="<?php echo esc_attr($this->fieldInputName); ?>[is_show_on_comment]" id="<?php echo esc_attr($this->fieldInputName); ?>[is_show_on_comment]" />
             </div>
+            <div class="wpd-field-option">
+                <label for="<?php echo esc_attr($this->fieldInputName); ?>[show_for_guests]"><?php esc_html_e("Display for Guests", "wpdiscuz"); ?>:</label> 
+                <input type="checkbox" value="1" <?php checked($this->fieldData["show_for_guests"], 1, true); ?> name="<?php echo esc_attr($this->fieldInputName); ?>[show_for_guests]" id="<?php echo esc_attr($this->fieldInputName); ?>[show_for_guests]" />
+            </div>
+            <div class="wpd-field-option">
+                <label for="<?php echo esc_attr($this->fieldInputName); ?>[show_for_users]"><?php esc_html_e("Display for Registered Users", "wpdiscuz"); ?>:</label> 
+                <input type="checkbox" value="1" <?php checked($this->fieldData["show_for_users"], 1, true); ?> name="<?php echo esc_attr($this->fieldInputName); ?>[show_for_users]" id="<?php echo esc_attr($this->fieldInputName); ?>[show_for_users]" />
+            </div>
             <div class="wpd-advaced-options wpd-field-option">
                 <small class="wpd-advaced-options-title"><?php esc_html_e("Advanced Options", "wpdiscuz"); ?></small>
                 <div class="wpd-field-option wpd-advaced-options-cont">
@@ -60,13 +70,13 @@ class SelectField extends Field {
     }
 
     public function editCommentHtml($key, $value, $data, $comment) {
-        if ($comment->comment_parent && !$data["is_show_sform"]) {
+        if (!$this->isShowForUser($data) || ($comment->comment_parent && !$data["is_show_sform"])) {
             return "";
         }
         $html = "<tr class='" . esc_attr($key) . "-wrapper wpd-edit-select'><td class='first'>";
         $html .= "<label for='" . esc_attr($key) . "'>" . esc_html($data["name"]) . ": </label>";
         $html .= "</td><td>";
-        $required = $data["required"] ? " required='required' aria-required='true' " : "";
+        $required = $this->isValidateRequired($data) ? " required='required' aria-required='true' " : "";
         $html .= "<div class='wpdiscuz-item  wpd-field-group wpd-field-select'>";
         $html .= "<select name='" . esc_attr($key) . "' class='" . esc_attr($key) . " wpd-field wpd-field-select wpdiscuz_select'$required>";
         $html .= "<option value=''>...</option>";
@@ -82,7 +92,7 @@ class SelectField extends Field {
     }
 
     public function frontFormHtml($name, $args, $options, $currentUser, $uniqueId, $isMainForm) {
-        if (empty($args["values"]) || (!$isMainForm && !$args["is_show_sform"]))
+        if (empty($args["values"]) || !$this->isShowForUser($args, $currentUser) || (!$isMainForm && !$args["is_show_sform"]))
             return;
         $hasDesc = $args["desc"] ? true : false;
         ?>
@@ -92,16 +102,19 @@ class SelectField extends Field {
                 <option value=""><?php echo htmlentities($args["name"]); ?></option>
                 <?php foreach ($args["values"] as $index => $val) { ?>
                     <option value="<?php echo esc_attr($index + 1); ?>"><?php echo htmlentities($val); ?></option>
-                <?php } ?>
-            </select>
-            <?php if ($args["desc"]) { ?>
-                <div class="wpd-field-desc"><i class="far fa-question-circle"></i><span><?php echo esc_html($args["desc"]); ?></span></div>
             <?php } ?>
+            </select>
+                    <?php if ($args["desc"]) { ?>
+                <div class="wpd-field-desc"><i class="far fa-question-circle"></i><span><?php echo esc_html($args["desc"]); ?></span></div>
+        <?php } ?>
         </div>
         <?php
     }
 
     public function frontHtml($value, $args) {
+        if(!$this->isShowForUser($args)){
+            return "";
+        }
         $html = "<div class='wpd-custom-field wpd-cf-text'>";
         $html .= "<div class='wpd-cf-label'>" . esc_html($args["name"]) . "</div> <div class='wpd-cf-value'> " . esc_html(apply_filters("wpdiscuz_custom_field_select", $value, $args)) . "</div>";
         $html .= "</div>";
@@ -109,16 +122,13 @@ class SelectField extends Field {
     }
 
     public function validateFieldData($fieldName, $args, $options, $currentUser) {
-        if (!$this->isCommentParentZero() && !$args["is_show_sform"]) {
-            return "";
-        }
-        $value = filter_input(INPUT_POST, $fieldName, FILTER_VALIDATE_INT);
+        $value = Sanitizer::sanitize(INPUT_POST, $fieldName, FILTER_VALIDATE_INT);
         if (is_int($value) && $value > 0 && key_exists($value - 1, $args["values"])) {
             $value = $args["values"][$value - 1];
         } else {
             $value = "";
         }
-        if (!$value && $args["required"]) {
+        if ($this->isValidateRequired($args, $currentUser) && !$value && $args["required"]) {
             wp_die(esc_html__($args["name"], "wpdiscuz") . " : " . esc_html__("field is required!", "wpdiscuz"));
         }
         return $value;

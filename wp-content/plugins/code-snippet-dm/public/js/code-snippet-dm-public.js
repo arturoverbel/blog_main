@@ -3,9 +3,12 @@ jQuery( document ).ready(function( $ ) {
 
     //Add the trigger for ClipboardJS
 	var copyCode = new ClipboardJS('#dm-copy-raw-code', {
-	    target: function(trigger) {
+        text: function(trigger) {
 	        // return the content of the <code>
-            return $(trigger).parent('.dm-buttons-right').parent('.dm-buttons').parent('.control-language').find('#dm-code-raw').get(0);
+            var clean = $(trigger).parent('.dm-buttons-right').parent('.dm-buttons').parent('.control-language').find('#dm-code-raw').text();
+            var clean_trim = $.trim(clean);
+            
+            return clean_trim;
 	    }
 	});
 

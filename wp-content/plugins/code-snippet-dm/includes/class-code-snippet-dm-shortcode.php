@@ -30,14 +30,25 @@ class CSDM_Shortcode {
 	 * @since    1.0.0
 	 */
 
-	 public function __construct() {
+    private $plugin_name;
+    private $version;
+
+	 public function __construct( $plugin_name, $version ) {
+        $this->plugin_name = $plugin_name;
+		$this->version = $version;
 
        add_shortcode( 'dm_code_snippet', array( $this, 'csdm_shortcode' ) );
-        
  	}
 
 	 // Add Shortcode for the code snippet
  	public function csdm_shortcode( $atts , $content = null ) {
+
+        wp_enqueue_style( $this->plugin_name . '-main-min', plugin_dir_url( __DIR__ ) . 'public/css/main.min.css', array(), $this->version, 'all' );
+
+        wp_enqueue_script( $this->plugin_name . '-dm-clipboard', plugin_dir_url( __DIR__ ) . 'public/js/clipboardv201.min.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script( $this->plugin_name . '-dm-prism', plugin_dir_url( __DIR__ ) . 'public/js/prism.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script( $this->plugin_name . '-dm-manually-start-prism', plugin_dir_url( __DIR__ ) . 'public/js/manually-start-prism.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __DIR__ ) . 'public/js/code-snippet-dm-public.js', array( 'jquery' ), $this->version, false );
 
  		// Attributes
  		$atts = shortcode_atts(
@@ -46,6 +57,7 @@ class CSDM_Shortcode {
 				'background-mobile' => 'yes',
                 'bg-color' 			=> '#abb8c3',
                 'slim' 				=> 'no',
+                'line-numbers' 		=> 'no',
  				'theme'    			=> 'dark',
 				'language' 			=> 'php',
 				'wrapped'  			=> 'no',
@@ -85,6 +97,12 @@ class CSDM_Shortcode {
             $slim = 'dm-normal-version';
         }
 
+        if ( 'yes' == $atts['line-numbers'] ) {
+            $line_numbers = 'line-numbers';
+        } else {
+            $line_numbers = 'no-line-numbers';
+        }
+
  		return '<div class="dm-code-snippet ' . esc_attr($atts['theme']) . ' ' .  $background . ' ' .  $background_mobile . ' ' .  $slim . '" style="background-color:' . esc_attr($atts['bg-color']) . ';" snippet-height="' . esc_attr($atts['height']) . '">
 			<div class="control-language">
                 <div class="dm-buttons">
@@ -100,9 +118,7 @@ class CSDM_Shortcode {
                         <span class="dm-error-message" style="display:none">Use a different Browser</span></a>
                     </div>
                 </div>
-                <pre>
-                    <code id="dm-code-raw" class="' . $wrap . ' language-' . esc_attr($atts['language']) . '">' . do_shortcode($content) . '</code>
-                </pre>
+                <pre class="'. $line_numbers .'"><code id="dm-code-raw" class="' . $wrap . ' language-' . esc_attr($atts['language']) . '">' . do_shortcode($content) . '</code></pre>
 			</div>
         </div>';
 

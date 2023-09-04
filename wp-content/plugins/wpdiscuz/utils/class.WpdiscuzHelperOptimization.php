@@ -31,6 +31,10 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
         add_action("deactivate_plugin", [&$this, "pluginDeactivated"]);
         add_action("wpdiscuz_clean_post_cache", [&$this, "cleanPostCache"]);
         add_action("wpdiscuz_clean_all_caches", [&$this, "cleanAllCaches"]);
+        if ($this->isApplicableToRequest()) {
+            add_filter('comments_pre_query', [&$this, "addCustomVariables"], PHP_INT_MAX, 2);
+            add_filter('the_comments', [&$this, "deleteCustomVariable"], PHP_INT_MIN, 2);
+        }
     }
 
     /**
@@ -58,7 +62,8 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
      */
     public function statusEventHandler($newStatus, $oldStatus, $comment) {
         if ($newStatus === "approved") {
-            if ($this->options->subscription["isNotifyOnCommentApprove"]) {
+            $currentUser = wp_get_current_user();
+            if ((!empty($currentUser->user_email) && $currentUser->user_email !== $comment->comment_author_email) && $this->options->subscription["isNotifyOnCommentApprove"]) {
                 $this->helperEmail->notifyOnApproving($comment);
             }
             $this->notifyOnApprove($comment);
@@ -91,8 +96,9 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
         do_action("wpdiscuz_reset_users_cache", $userId . "_" . $user->user_email . "_" . $user->display_name);
     }
 
-    public function wpfProfileUpdate() {
-        do_action("wpdiscuz_reset_users_cache", WPF()->current_object["user"]["userid"] . "_" . WPF()->current_object["user"]["user_email"] . "_" . WPF()->current_object["user"]["display_name"]);
+    public function wpfProfileUpdate($user) {
+        $wpUser = get_user_by("id", $user["userid"]);
+        do_action("wpdiscuz_reset_users_cache", $wpUser->ID . "_" . $wpUser->user_email . "_" . $wpUser->display_name);
         do_action("wpdiscuz_reset_comments_cache");
     }
 
@@ -177,10 +183,10 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
         }
     }
 
-    public function cleanCommentRelatedRows($commentId, $comment) {
+    public function cleanCommentRelatedRows($commentId, $comment = null) {
         $this->dbManager->deleteSubscriptions($commentId);
         $this->dbManager->deleteVotes($commentId);
-        if (!empty($comment->comment_post_ID)) {
+        if ($comment && !empty($comment->comment_post_ID)) {
             $this->cleanPostCache($comment->comment_post_ID);
         }
     }
@@ -237,6 +243,8 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
                 \SiteGround_Optimizer\Supercacher\Supercacher::delete_assets();
             }
         }
+
+        update_post_meta($postId, self::POSTMETA_STATISTICS, []);
     }
 
     public function cleanAllCaches() {
@@ -279,4 +287,35 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
         }
     }
 
+    //Integration with Redis or Memcached
+    
+    private function isApplicableToRequest(){
+        if(!wp_doing_ajax()) {
+            return false;
+        }
+        if(!isset($_REQUEST["action"]) || sanitize_text_field($_REQUEST["action"]) !== "wpdLoadMoreComments") {
+            return false;
+        }
+        return true;
+    }
+    
+    public function addCustomVariables($comment_data, $query) {
+        $query->query_var_defaults["wpdiscuz"] = "temporary_from_" . __CLASS__ . "::" . __METHOD__;
+        $this->addWpDiscuzParams($query);
+        return $comment_data;
+    }
+
+    public function deleteCustomVariable($_comments, $query) {
+        unset($query->query_var_defaults["wpdiscuz"]);
+        return $_comments;
+    }
+
+    
+    private function addWpDiscuzParams($query){
+        $query->query_vars["wpdiscuz"] = wp_array_slice_assoc($_REQUEST , $this->getWpDiscuzSpecificArgs());
+    }
+
+    private function getWpDiscuzSpecificArgs(){
+        return ["lastParentId", "isFirstLoad", "offset", "sorting"];
+    }
 }

@@ -7,11 +7,30 @@
 
   &.no-background-mobile {
     @include xs {
-      padding: 0;
+        padding: 0;
     }
+
+    .control-language {
+        @include xs {
+            box-shadow: none;
+        }
+      }
   }
 
   #dm-copy-raw-code-copied {
     display: none;
   }
+}
+
+textarea {
+    background-color: transparent!important;
+}
+
+#dm-code-raw {
+    margin-top: 0px;
+    display: block;
+
+    &.no-wrap {
+        margin-bottom: 15px;
+    }
 }

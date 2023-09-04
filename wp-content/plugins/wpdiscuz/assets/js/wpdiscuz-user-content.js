@@ -7,15 +7,16 @@ jQuery(document).ready(function ($) {
     var refreshAfterDeleting = 0;
     var isNativeAjaxEnabled = parseInt(wpdiscuzAjaxObj.isNativeAjaxEnabled);
     var additionalTab = parseInt(wpdiscuzUCObj.additionalTab);
-    $(document).on('click', '.wpd-info,.wpd-page-link,.wpd-delete-content,.wpd-user-email-delete-links', function (e) {
+    $('body').on('click', '.wpd-info,.wpd-page-link,.wpd-delete-content,.wpd-user-email-delete-links', function (e) {
         e.preventDefault();
     });
 
-    $(document).on('click', '.wpd-info.wpd-not-clicked', function (e) {
+    $('body').on('click', '.wpd-info.wpd-not-clicked', function (e) {
         var btn = $(this);
         btn.removeClass('wpd-not-clicked');
         var data = new FormData();
         data.append('action', 'wpdGetInfo');
+        
         wpdFullInfo(btn, data);
         return false;
     });
@@ -42,7 +43,7 @@ jQuery(document).ready(function ($) {
                 });
     }
 
-    $(document).on('click', '.wpd-list-item', function () {
+    $('body').on('click', '.wpd-list-item', function () {
         var relValue = $('input.wpd-rel', this).val();
         $('#wpdUserContentInfo .wpd-list-item').removeClass('wpd-active');
         $('#wpdUserContentInfo .wpd-content-item').removeClass('wpd-active');
@@ -69,7 +70,7 @@ jQuery(document).ready(function ($) {
     });
 
 
-    $(document).on('click', '.wpd-page-link.wpd-not-clicked', function (e) {
+    $('body').on('click', '.wpd-page-link.wpd-not-clicked', function (e) {
         var btn = $(this);
         btn.removeClass('wpd-not-clicked');
         var goToPage = btn.data('wpd-page');
@@ -87,7 +88,7 @@ jQuery(document).ready(function ($) {
                 });
     });
 
-    $(document).on('click', '.wpd-delete-content.wpd-not-clicked', function () {
+    $('body').on('click', '.wpd-delete-content.wpd-not-clicked', function () {
         var btn = $(this);
         var id = parseInt(btn.data('wpd-content-id'));
         if (!isNaN(id)) {
@@ -125,7 +126,7 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $(document).on('click', '[data-lity-close]', function (e) {
+    $('body').on('click', '[data-lity-close]', function (e) {
         if ($(e.target).is('[data-lity-close]')) {
             if (refreshAfterDeleting) {
                 window.location.reload(true);
@@ -133,7 +134,7 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $(document).on('click', '.wpd-user-email-delete-links.wpd-not-clicked', function () {
+    $('body').on('click', '.wpd-user-email-delete-links.wpd-not-clicked', function () {
         var btn = $(this);
         btn.removeClass('wpd-not-clicked');
         $('.wpd-loading', btn).addClass('wpd-show');
@@ -146,7 +147,7 @@ jQuery(document).ready(function ($) {
                 });
     });
 
-    $(document).on('click', '.wpd-user-settings-button.wpd-not-clicked', function () {
+    $('body').on('click', '.wpd-user-settings-button.wpd-not-clicked', function () {
         var btn = $(this);
         btn.removeClass('wpd-not-clicked');
         var guestAction = btn.data('wpd-delete-action');
@@ -155,6 +156,7 @@ jQuery(document).ready(function ($) {
             var data = new FormData();
             data.append('action', 'wpdGuestAction');
             data.append('guestAction', guestAction);
+            
             wpdiscuzAjaxObj.getAjaxObj(isNativeAjaxEnabled || additionalTab, false, data)
                     .done(function (response) {
                         btn.addClass('wpd-not-clicked');

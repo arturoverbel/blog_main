@@ -8,7 +8,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="isEnableOnHome">
     <div class="wpd-opt-name">
         <label for="isEnableOnHome"><?php echo esc_html($setting["options"]["isEnableOnHome"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["isEnableOnHome"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["isEnableOnHome"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -26,7 +26,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="isNativeAjaxEnabled">
     <div class="wpd-opt-name">
         <label for="isNativeAjaxEnabled"><?php echo esc_html($setting["options"]["isNativeAjaxEnabled"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["isNativeAjaxEnabled"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["isNativeAjaxEnabled"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -43,7 +43,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="loadComboVersion">
     <div class="wpd-opt-name">
         <label for="loadComboVersion"><?php echo esc_html($setting["options"]["loadComboVersion"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["loadComboVersion"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["loadComboVersion"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -60,7 +60,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="loadMinVersion">
     <div class="wpd-opt-name">
         <label for="loadMinVersion"><?php echo esc_html($setting["options"]["loadMinVersion"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["loadMinVersion"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["loadMinVersion"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -78,7 +78,7 @@ if (!defined("ABSPATH")) {
     <div class="wpd-opt-row" data-wpd-opt="commentLinkFilter">
         <div class="wpd-opt-name">
             <label><?php echo esc_html($setting["options"]["commentLinkFilter"]["label"]) ?></label>
-            <p class="wpd-desc"><?php echo $setting["options"]["commentLinkFilter"]["description"] ?></p>
+            <p class="wpd-desc"><?php echo esc_html($setting["options"]["commentLinkFilter"]["description"]) ?></p>
         </div>
         <div class="wpd-opt-input">
             <div class="wpd-radio">
@@ -107,7 +107,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="redirectPage">
     <div class="wpd-opt-name">
         <label for="redirectPage"><?php echo esc_html($setting["options"]["redirectPage"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["redirectPage"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["redirectPage"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <?php
@@ -129,7 +129,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="simpleCommentDate">
     <div class="wpd-opt-name">
         <label for="simpleCommentDate"><?php echo esc_html($setting["options"]["simpleCommentDate"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["simpleCommentDate"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["simpleCommentDate"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher" style="margin-bottom: 5px;">
@@ -151,7 +151,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="dateDiffFormat">
     <div class="wpd-opt-name">
         <label for="dateDiffFormat"><?php echo esc_html($setting["options"]["dateDiffFormat"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["dateDiffFormat"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["dateDiffFormat"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <input type="text" value="<?php echo esc_attr($this->general["dateDiffFormat"]); ?>" name="<?php echo esc_attr(WpdiscuzCore::TAB_GENERAL); ?>[dateDiffFormat]" id="dateDiffFormat" />
@@ -166,7 +166,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="isUsePoMo">
     <div class="wpd-opt-name">
         <label for="isUsePoMo"><?php echo esc_html($setting["options"]["isUsePoMo"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["isUsePoMo"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["isUsePoMo"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -184,7 +184,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="showPluginPoweredByLink" style="border-bottom: none;">
     <div class="wpd-opt-name">
         <label for="showPluginPoweredByLink" style="padding-right: 20px;"><?php echo esc_html($setting["options"]["showPluginPoweredByLink"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["showPluginPoweredByLink"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["showPluginPoweredByLink"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <label for="showPluginPoweredByLink">
@@ -206,7 +206,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="isCacheEnabled">
     <div class="wpd-opt-name">
         <label for="isCacheEnabled"><?php echo esc_html($setting["options"]["isCacheEnabled"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["isCacheEnabled"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["isCacheEnabled"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <div class="wpd-switcher">
@@ -224,7 +224,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="cacheTimeout" style="border-bottom: none;">
     <div class="wpd-opt-name">
         <label for="cacheTimeout"><?php echo esc_html($setting["options"]["cacheTimeout"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["cacheTimeout"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["cacheTimeout"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
 		<?php $cacheTimeout = isset($this->general["cacheTimeout"]) && ($days = absint($this->general["cacheTimeout"])) ? $days : 10; ?>
@@ -244,7 +244,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="removeVoteData">
     <div class="wpd-opt-name">
         <label for="removeVoteData"><?php echo esc_html($setting["options"]["removeVoteData"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["removeVoteData"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["removeVoteData"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <?php $voteUrl = admin_url("admin-post.php?action=removeVoteData"); ?>
@@ -260,7 +260,7 @@ if (!defined("ABSPATH")) {
 <div class="wpd-opt-row" data-wpd-opt="purgeAllCaches">
     <div class="wpd-opt-name">
         <label for="purgeAllCaches"><?php echo esc_html($setting["options"]["purgeAllCaches"]["label"]) ?></label>
-        <p class="wpd-desc"><?php echo $setting["options"]["purgeAllCaches"]["description"] ?></p>
+        <p class="wpd-desc"><?php echo esc_html($setting["options"]["purgeAllCaches"]["description"]) ?></p>
     </div>
     <div class="wpd-opt-input">
         <?php $allCacheUrl = admin_url("admin-post.php?action=purgeAllCaches"); ?>

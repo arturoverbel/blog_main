@@ -25,7 +25,8 @@
         }
 
         .dm-buttons-right {
-            right: 3em;
+            z-index: 9;
+            right: 2em;
             position: absolute;
     
             @include sm {
@@ -37,7 +38,11 @@
 
     #dm-code-raw {
         display: block;
-        margin-top: -60px;
+        margin-top: 0px;
         line-height: 1.8;
+
+        &.no-wrap {
+            margin-bottom: 0px;
+        }
     }
 }

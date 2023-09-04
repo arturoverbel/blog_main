@@ -1,10 +1,10 @@
 jQuery(document).ready(function ($) {
 
-    $(document).on('click', '#wpdcom .wmu-upload-wrap', function () {
+    $('body').on('click', '#wpdcom .wmu-upload-wrap', function () {
         $('.wpd-form-foot', $(this).parents('.wpd_comm_form')).slideDown(parseInt(wpdiscuzAjaxObj.enableDropAnimation) ? 500 : 0);
     });
 
-    $(document).on('change', '.wmu-add-files', function () {
+    $('body').on('change', '.wmu-add-files', function () {
         var btn = $(this);
         var form = btn.parents('.wpd_comm_form');
         var files = btn[0].files ? btn[0].files : [];
@@ -14,9 +14,9 @@ jQuery(document).ready(function ($) {
     });
 
     function wmuUploadFiles(btn, form, files) {
+        form.attr('data-uploading', 'true');
         var data = new FormData();
-        data.append('action', 'wmuUploadFiles');
-        data.append('wmu_nonce', wpdiscuzAjaxObj.wmuSecurity);
+        data.append('action', 'wmuUploadFiles');        
         data.append('wmuAttachmentsData', $('.wmu-attachments-data', form).val());
         data.append('uniqueId', form.find('.wpdiscuz_unique_id').val());
         var size = 0;
@@ -50,10 +50,12 @@ jQuery(document).ready(function ($) {
                             }
                         }
                         $('#wpdiscuz-loading-bar').fadeOut(250);
+                        form.attr('data-uploading', 'false');
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
                         console.log(errorThrown);
                         $('#wpdiscuz-loading-bar').fadeOut(250);
+                        form.attr('data-uploading', 'false');
                     });
         }
     }
@@ -86,19 +88,18 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    $(document).on('click', '.wmu-attachment-delete', function (e) {
+    $('body').on('click', '.wmu-attachment-delete', function (e) {
         if (confirm(wpdiscuzAjaxObj.wmuPhraseConfirmDelete)) {
             var btn = $(this);
             var attachmentId = btn.data('wmu-attachment');
             var data = new FormData();
-            data.append('action', 'wmuDeleteAttachment');
-            data.append('wmu_nonce', wpdiscuzAjaxObj.wmuSecurity);
+            data.append('action', 'wmuDeleteAttachment');            
             data.append('attachmentId', attachmentId);
             wpdiscuzAjaxObj.getAjaxObj(true, true, data)
                     .done(function (r) {
                         if (r.success) {
-                            var parent = $('.wmu-attachment-' + attachmentId).parents('.wmu-comment-attachments');
-                            $('.wmu-attachment-' + attachmentId).remove();
+                            var parent = btn.parents('.wmu-comment-attachments');
+                            btn.parent('.wmu-attachment').remove();
                             if (!$('.wmu-attached-images *', parent).length) {
                                 $('.wmu-attached-images', parent).remove();
                             }
@@ -129,15 +130,14 @@ jQuery(document).ready(function ($) {
      * ajax request
      * remove preview from frontend (html) and backend (db data)
      */
-    $(document).on('click', '.wmu-preview', function () {
+    $('body').on('click', '.wmu-preview', function () {
         var btn = $(this);
         var form = btn.parents('.wpd_comm_form');
         var type = btn.data('wmu-type');
         var id = btn.data('wmu-attachment');
         var data = new FormData();
         data.append('action', 'wmuRemoveAttachmentPreview');
-        data.append('attachmentId', id);
-        data.append('wmu_nonce', wpdiscuzAjaxObj.wmuSecurity);
+        data.append('attachmentId', id);        
         data.append('wmuAttachmentsData', $('.wmu-attachments-data', form).val());
         data.append('uniqueId', form.find('.wpdiscuz_unique_id').val());
         wpdiscuzAjaxObj.getAjaxObj(true, true, data)

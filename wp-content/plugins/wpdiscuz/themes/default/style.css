@@ -143,6 +143,7 @@ _:-ms-lang(x), .wpd-social-login [wpd-tooltip]::before{top: -24px;}
 #wpdcom .wpd-social-login .wpdsn-fb i{background-color: #4267B2;}
 #wpdcom .wpd-social-login .wpdsn-tw i{background-color:#1DA1F2;}
 #wpdcom .wpd-social-login .wpdsn-gg i{background-color:#D54C3F;}
+#wpdcom .wpd-social-login .wpdsn-telegram i{background-color:#239cd7;}
 #wpdcom .wpd-social-login .wpdsn-ds i{background-color:#2196F3;}
 #wpdcom .wpd-social-login .wpdsn-wp i{background-color:#999999;}
 #wpdcom .wpd-social-login .wpdsn-vk i{background-color:#4C75A3;}
@@ -452,6 +453,7 @@ _:-ms-lang(x), .wpd-social-login [wpd-tooltip]::before{top: -24px;}
 #wpdcom .wpd-thread-filter .wpdf-sorting{font-size:14px; color:#777777; line-height: 18px; text-transform: capitalize; min-width: 100px; font-family: "Arial Hebrew", Arial, sans-serif;}
 #wpdcom .wpd-thread-filter .wpdf-sorting i{font-size: 15px; margin-left: 6px; vertical-align: top; line-height: 14px;}
 #wpdcom .wpd-thread-list .wpd-load-more-submit-wrap{display: flex; flex-direction: row; justify-content: center; padding: 10px;}
+#wpdcom .wpd-comment .wpd-comment-wrap .wpd-comment-author span.wpd-user-nicename{color:#aaaaaa;font-size:13px;font-family: "Courier New", Courier, monospace;}
 
 /* Comment - Default Layout (#1) */
 #wpdcom .wpd-thread-list{ padding: 30px 0;}
@@ -869,6 +871,14 @@ _:-ms-lang(x), #wpdcom.wpd-layout-3 .wpd-comment.wpd-reply .wpd-comment-footer .
 #wpdcom.wpd-layout-3 .wpd-soc-user-google .wpd-comment-subheader{border-top: 1px dashed #bf301c!important;}
 #wpdcom.wpd-layout-3 .wpd-reply .wpd-soc-user-google .wpd-comment-right{border-left: 1px solid #bf301c!important;}
 #wpdcom .wpd-soc-user-google .wpd-avatar i{background: #bf301c!important; color: #ffffff;}
+/* Blog User Telegram */
+#wpdcom .wpd-soc-user-telegram .wpd-comment-label{color: #ffffff; background-color: #239cd7!important; border: none;}
+#wpdcom .wpd-soc-user-telegram .wpd-comment-author, #wpdcom .wpd-soc-user-telegram .wpd-comment-author a{color: #239cd7!important;}
+#wpdcom.wpd-layout-2 .wpd-comment.wpd-reply .wpd-soc-user-telegram{border-left: 3px solid #239cd7!important;}
+#wpdcom.wpd-layout-2 .wpd-comment .wpd-soc-user-telegram .wpd-avatar img{border-bottom-color: #239cd7!important;}
+#wpdcom.wpd-layout-3 .wpd-soc-user-telegram .wpd-comment-subheader{border-top: 1px dashed #239cd7!important;}
+#wpdcom.wpd-layout-3 .wpd-reply .wpd-soc-user-telegram .wpd-comment-right{border-left: 1px solid #239cd7!important;}
+#wpdcom .wpd-soc-user-telegram .wpd-avatar i{background: #239cd7!important; color: #ffffff;}
 /* Blog Facebook */
 #wpdcom .wpd-soc-user-facebook .wpd-comment-label{color: #ffffff; background-color: #4267B2!important; border: none;}
 #wpdcom .wpd-soc-user-facebook .wpd-comment-author, #wpdcom .wpd-soc-user-facebook .wpd-comment-author a{color: #4267B2!important;}
@@ -1045,7 +1055,7 @@ _:-ms-lang(x), #wpdcom.wpd-layout-3 .wpd-comment.wpd-reply .wpd-comment-footer .
 /* Smart Phones */
 @media screen and (max-width:600px){
     #comments, #respond{padding-left: 0!important;padding-right: 0!important;}
-    #wpdcom {padding: 5px 3%;overflow: hidden;}
+    #wpdcom {padding: 5px 3%;overflow-x: hidden;}
     #wpdcom .wpd-form-row div:hover.wpd-field-desc span {margin-left: -187px;}
     #wpdcom .wpd-form-row div.wpd-field-desc span::after { margin-left: 80px;}
     /*#wpdcom #wpd-threads .wpd-comment-link [wpd-tooltip]::after{left: -150%;top:-16px}*/
@@ -1167,4 +1177,12 @@ _:-ms-lang(x), #wpdcom.wpd-layout-3 .wpd-comment.wpd-reply .wpd-comment-footer .
     [wpd-tooltip-size='small']::after{min-width: 60px;}
     [wpd-tooltip-size='medium']::after{min-width: 90px;}
     [wpd-tooltip-size='long']::after{min-width: 200px;}
+}
+
+.wp-block-comments-wpdiscuz .wpdiscuz-edit-bloc-notice {
+    margin: 50px auto;
+    max-width: 750px;
+    background-color: #F6F6F6;
+    font-size: 11px;
+
 }

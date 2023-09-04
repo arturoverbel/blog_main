@@ -15,6 +15,7 @@ use Google\Site_Kit\Core\Modules\Modules;
 use Google\Site_Kit\Core\Permissions\Permissions;
 use Google\Site_Kit\Core\Assets\Assets;
 use Google\Site_Kit\Core\REST_API\REST_Route;
+use Google\Site_Kit\Core\REST_API\REST_Routes;
 use Google\Site_Kit\Core\Storage\Options;
 use Google\Site_Kit\Core\Util\Method_Proxy_Trait;
 use Google\Site_Kit\Core\Util\Requires_Javascript_Trait;
@@ -105,6 +106,18 @@ final class Admin_Bar {
 			}
 		);
 
+		add_filter(
+			'googlesitekit_apifetch_preload_paths',
+			function( $routes ) {
+				return array_merge(
+					$routes,
+					array(
+						'/' . REST_Routes::REST_ROOT . '/core/site/data/admin-bar-settings',
+					)
+				);
+			}
+		);
+
 		$this->admin_bar_enabled->register();
 	}
 
@@ -174,6 +187,10 @@ final class Admin_Bar {
 			return false;
 		}
 
+		if ( ! current_user_can( Permissions::VIEW_ADMIN_BAR_MENU ) ) {
+			return false;
+		}
+
 		$enabled = $this->admin_bar_enabled->get();
 		if ( ! $enabled ) {
 			return false;
@@ -189,11 +206,6 @@ final class Admin_Bar {
 		if ( in_array( $entity->get_type(), array( 'post', 'blog' ), true ) && $entity->get_id() ) {
 			// If a post entity, check permissions for that post.
 			if ( ! current_user_can( Permissions::VIEW_POST_INSIGHTS, $entity->get_id() ) ) {
-				return false;
-			}
-		} else {
-			// Otherwise use more general permission check (typically admin-only).
-			if ( ! current_user_can( Permissions::VIEW_DASHBOARD ) ) {
 				return false;
 			}
 		}
